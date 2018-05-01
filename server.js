@@ -10,3 +10,4 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
   return json.status(200);
 });
+ 
