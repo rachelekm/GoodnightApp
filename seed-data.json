@@ -1,0 +1,9 @@
+{
+	"dream_log":[
+{"submitDate": "Tue Mar 24 2015 20:00:00 GMT-0400 (EDT)", "keywords": ["pinapple", "star wars", "alligator"], "mood": "stressed", "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."},
+{"submitDate": "Tue Mar 24 2015 20:00:00 GMT-0400 (EDT)", "keywords": ["apple", "star wars", "alligator"], "mood": "stressed", "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."},
+{"submitDate": "Tue Mar 24 2015 20:00:00 GMT-0400 (EDT)", "keywords": ["fruit", "star wars", "alligator"], "mood": "frazzled", "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."},
+{"submitDate": "Tue Mar 24 2015 20:00:00 GMT-0400 (EDT)", "keywords": ["strawberry", "star wars", "alligator"], "mood": "happy", "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."}
+
+]
+}
