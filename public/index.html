@@ -1,1 +1,42 @@
-<p>Hello world, testing Heroku</p>
+<!DOCTYPE html>
+<html lang ='en'>
+<head>
+	<meta charset='utf-8'>
+	<meta name='viewport' content='width=device-width'>
+	<title>Dream Journal App</title>
+	<meta name='description' content='dream tracking and reporting app'>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.css">
+	<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="main.css">
+</head>
+<body>
+	<section role='main'>
+		<section class='signUpFormSection'>
+			<form class="signUpForm">Sign Up Form
+      			<fieldset class="signUpFieldset">
+        		<legend>
+        		<input type='text' name='usernameInput' placeholder='username' required></legend>
+        		<legend>
+        		<input type='password' name='passwordInput' placeholder='password' required></legend>
+      			</fieldset>
+      			<button role="button" type="submit" class="submitButton">Submit</button>
+    		</form>
+		</section>
+		<section class='loginFormSection'>
+			<form class="loginForm">Log In Form
+      			<fieldset class="loginFieldset">
+        		<legend>
+        		<input type='text' name='usernameInput' placeholder='username' ></legend>
+        		<legend>
+        		<input type='password' name='passwordInput' placeholder='password' ></legend>
+      			</fieldset>
+      			<button role="button" type="submit" class="submitButton">Submit</button>
+    		</form>
+		</section>
+		<section class='results'>
+			
+		</section>
+	</section>
+<script src="clientside.js"></script>
+</body>
+</html>
