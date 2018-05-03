@@ -18,6 +18,9 @@ app.use(morgan('common'));
 const { router: newUserRouter } = require('./users');
 const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
 
+passport.use(localStrategy);
+passport.use(jwtStrategy);
+
 app.use('/signup', newUserRouter);
 app.use('/login', authRouter);
 
