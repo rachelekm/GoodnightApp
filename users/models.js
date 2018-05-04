@@ -13,11 +13,20 @@ const UserSchema = mongoose.Schema({
   password: {
     type: String,
     required: true
-  }
+  },
+  dream_log: [{
+    submitDate: String,
+    keywords : Array,
+    mood: String,
+    content: String
+     }]
 });
 
 UserSchema.methods.serialize = function() {
-	return {username: this.username || ''};
+	return {
+    username: this.username || '',
+    dream_log: this.dream_log || ''
+};
 }
 
 UserSchema.methods.validatePassword = function(password) {

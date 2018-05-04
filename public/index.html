@@ -12,30 +12,30 @@
 <body>
 	<section role='main'>
 		<section class='signUpFormSection'>
-			<form class="signUpForm">Sign Up Form
+			<button type="button" class='createAccountButton'>Create Account</button>
+			<form class="signUpForm" hidden>Sign Up Form
       			<fieldset class="signUpFieldset">
         		<legend>
-        		<input type='text' name='usernameInput' placeholder='username' required></legend>
+        		<input type='text' name='usernameInput' placeholder='username' aria-label="sign-up-form-username-input" required></legend>
         		<legend>
-        		<input type='password' name='passwordInput' placeholder='password' required></legend>
+        		<input type='password' name='passwordInput' placeholder='password' aria-label="sign-up-form-password-input" required></legend>
       			</fieldset>
       			<button role="button" type="submit" class="submitButton">Submit</button>
     		</form>
 		</section>
 		<section class='loginFormSection'>
-			<form class="loginForm">Log In Form
+			<button type="button" class='loginAccountButton'>Log in</button>
+			<form class="loginForm" hidden>Log In Form
       			<fieldset class="loginFieldset">
         		<legend>
-        		<input type='text' name='usernameInput' placeholder='username' ></legend>
+        		<input type='text' name='usernameInput' placeholder='username' aria-label="login-form-username-input" required></legend>
         		<legend>
-        		<input type='password' name='passwordInput' placeholder='password' ></legend>
+        		<input type='password' name='passwordInput' placeholder='password' aria-label="login-form-password-input" required></legend>
       			</fieldset>
       			<button role="button" type="submit" class="submitButton">Submit</button>
     		</form>
 		</section>
-		<section class='results'>
-			
-		</section>
+		<div id='results'></div>
 	</section>
 <script src="clientside.js"></script>
 </body>
