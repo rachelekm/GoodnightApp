@@ -13,17 +13,29 @@
 	<section role='main' id='main'>
 		<section id='accountHomepage'>
 			<div class='navigationBar'>
-				<a href='/accounthomepage.html'><button type='button' class='accountProfileNavButton' value='Go_to_Account_Profile'>Account</button></a>
+				<button type='button' class='accountProfileNavButton' value='Go_to_Account_Profile'>Account</button>
 				<a href='dreamlog.html' hidden><button type='button' class='dreamLogNavButton' value='Go_to_Dream_Log'>Dream Log</button></a>
 				<a href='dreamreport.html'><button type='button' class='dreamReportNavButton' value='Go_to_Dream_Report'>Dream Report</button></a>
 				<a href='/accounthomepage.html'><button type='button' class='newEntryNavButton' value='Go_to_New_Dream_Entry'>New Entry</button></a>
 			</div>
 		</section>
+		<section id='accountProfileWindow' hidden>
+		</section>
 		<section id='pageContents'>
-			<p>Made it to dream log!</p>
+			<form class="searchDreamKeywordsForm">
+        		<legend>
+        		<input type='text' name='dreamSearchKeywordInput' placeholder='Search by dream keywords' aria-label="dream-keyword-search-input"></legend>
+        		<button role="button" type="submit" class="dreamKeywordSearchButton">Search</button>
+        	</form>
+        	<form class="searchDreamMoodForm">
+				<legend>
+        		<input type='text' name='dreamSearchMoodInput' placeholder='Search by mood' aria-label="mood-search-input"></legend>
+        		<button role="button" type="submit" class="dreamMoodSearchButton">Search</button>
+        	</form>
 			<div id='dreamLog'>
 				<p>Its working!</p>
 			</div>
+			<div id='deleteEntryWarning' hidden></div>
 		</section>
 	</section>
 <script src="/clientside.js"></script>

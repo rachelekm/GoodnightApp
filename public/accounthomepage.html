@@ -13,15 +13,41 @@
 	<section role='main' id='main'>
 		<section role='header' id='accountHomepage'>
 			<div class='navigationBar'>
-				<a href='/accounthomepage.html'><button type='button' class='accountProfileNavButton' value='Go_to_Account_Profile'>Account</button></a>
+				<button type='button' class='accountProfileNavButton' value='Go_to_Account_Profile'>Account</button>
 				<a href='dreamlog.html'><button type='button' class='dreamLogNavButton' value='Go_to_Dream_Log'>Dream Log</button></a>
 				<a href='dreamreport.html'><button type='button' class='dreamReportNavButton' value='Go_to_Dream_Report'>Dream Report</button></a>
 				<a href='/accounthomepage.html'><button type='button' class='newEntryNavButton' value='Go_to_New_Dream_Entry' hidden>New Entry</button></a>
 			</div>
 		</section>
-		<section id='accountProfile' hidden>
+		<section id='accountProfileWindow' hidden>
 		</section>
-		<section id='pageContents' hidden>
+		<section id='pageContents'>
+			<form class="dreamEntryForm">New Entry
+      			<fieldset class="newEntryFieldset">
+        		<legend>
+        		<input type='text' name='dreamContentInput' placeholder='Type your dream here...' aria-label="dream-entry-content-input" required></legend>
+        		<legend>What three symbols stuck out most?
+        		<input type='text' name='dreamKeywordsInput1' placeholder='keyword' aria-label="dream-keyword-input" required></legend>
+        		<legend>
+        		<input type='text' name='dreamKeywordsInput2' placeholder='keyword' aria-label="dream-keyword-input" required></legend>
+        		<legend>
+        		<input type='text' name='dreamKeywordsInput3' placeholder='keyword' aria-label="dream-keyword-input" required></legend>
+				<legend>How were you feeling yesterday?
+      			<select name='userMoodInput' placeholder='mood' aria-label="user-mood-input" multiple size='1' required>
+      				<option value='happy'>Happy</option>
+      				<option value='calm'>Calm</option>
+      				<option value='lethargic'>Lethargic</option>
+      				<option value='emotional'>Emotional</option>
+      				<option value='anxious'>Anxious</option>
+      				<option value='irritated'>Irritated</option>
+      				<option value='depressed'>Depressed</option>
+      				<option value='excited'>Excited</option>
+      				<option value='nervous'>Nervous</option>
+      				<option value='apathetic'>Apathetic</option>
+      			</select></legend>
+      			</fieldset>
+      			<button role="button" type="submit" class="submitButton">Submit</button>
+    		</form>
 		</section>
 	</section>
 <script src="/clientside.js"></script>
