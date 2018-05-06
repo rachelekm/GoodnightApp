@@ -1,0 +1,56 @@
+/*
+main background color: #182f4c;
+*/
+
+* {
+  box-sizing: border-box;
+  background-color: #182f4c;
+}
+
+#main {
+	color: white;
+	padding: 20px;
+}
+
+.createAccountButton, .loginAccountButton {
+	position: relative;
+	display: inline-block;
+	width: 40%;
+	float: left;
+	border: none;
+	color: white;
+}
+
+.loginForm, .signUpForm {
+	position: relative;
+	float: left;
+	background-color: #152944;
+	width: 80%;
+	padding: 20px;
+}
+
+.loginForm fieldset, .signUpForm fieldset, .loginForm input, .signUpForm input, .loginForm legend, .signUpForm legend{
+	background-color: #152944;
+	border: none;
+	color: white;
+	width: 100%;
+}
+
+.loginForm fieldset, .signUpForm fieldset {
+	width: 75%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.loginForm input, .signUpForm input {
+	padding: 10px;
+	margin: 3px;
+	border-bottom: 1px solid white;
+	width: 100%;
+}
+
+.loginForm button, .signUpForm button {
+	background-color: #152944;
+	border: none;
+	color: white;
+}
