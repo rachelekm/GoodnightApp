@@ -11,9 +11,17 @@ mongoose.Promise = global.Promise;
 const { PORT, DATABASE_URL } = require('./config');
 
 const app = express();
-app.use(express.static('public'));
+
+const { router: newUserRouter } = require('./users');
+const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
 
 app.use(morgan('common'));
+
+app.use(express.static('public'));
+
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/views/index.html');
+});
 
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
@@ -25,19 +33,12 @@ app.use(function (req, res, next) {
   next();
 });
 
-const { router: newUserRouter } = require('./users');
-const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
-
 passport.use(localStrategy);
 passport.use(jwtStrategy);
 
 app.use('/signup', newUserRouter);
 app.use('/login', authRouter);
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/index.html');
-  return json.status(200);
-});
 
 let server;
 
