@@ -1,10 +1,11 @@
 /*
-main background color: #182f4c;
+main background color: #16283f;
 */
 
 * {
   box-sizing: border-box;
-  background-color: #182f4c;
+  background-color: #16283f;
+  font-family: 'Gothic A1', sans-serif;
 }
 
 #main {
@@ -24,13 +25,13 @@ main background color: #182f4c;
 .loginForm, .signUpForm {
 	position: relative;
 	float: left;
-	background-color: #152944;
+	background-color: #12243a;
 	width: 80%;
 	padding: 20px;
 }
 
 .loginForm fieldset, .signUpForm fieldset, .loginForm input, .signUpForm input, .loginForm legend, .signUpForm legend{
-	background-color: #152944;
+	background-color: #12243a;
 	border: none;
 	color: white;
 	width: 100%;
@@ -50,7 +51,92 @@ main background color: #182f4c;
 }
 
 .loginForm button, .signUpForm button {
-	background-color: #152944;
+	background-color: #12243a;
 	border: none;
 	color: white;
+}
+
+.navigationBar {
+	width: 100%;
+	background-color: #182f4c;
+	padding: 10px;
+	-webkit-box-shadow: 0 3px 5px -3px white;
+	-moz-box-shadow: 0 3px 5px -3px #000;
+	box-shadow: 0 3px 5px -3px #000;
+}
+
+.navigationBar button {
+	width: 32%;
+	margin: 0;
+	border-width: 0;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #182f4c;
+	color: #D4E4F2;
+}
+
+#accountProfileWindow {
+	z-index: 3;
+	position: absolute;
+	width: 85%;
+	height: 60%;
+	padding: 20px;
+	border-radius: 2px;
+	box-shadow: 3px 3px 10px black;
+	background-color: #5782ba;
+}
+
+#accountProfileWindow *{
+	background-color: #5782ba;
+}
+
+.newEntryFieldset {
+	margin: 0;
+	border: none;
+}
+
+.dreamEntryLegend {
+	width: 100%;
+}
+
+input[name='dreamContentInput'] {
+	width: 100%;
+	height: 300px;
+	border: none;
+	color: white;
+	background-color:  #12243a;
+}
+
+.newEntryFieldset input, .newEntryFieldset select{
+	width: 100%;
+	padding: 5px;
+	color: white;
+}
+
+.dreamEntry {
+	padding: 10px;
+	background-color:  #12243a;
+	margin: 10px;
+}
+
+.dreamEntry *{
+	background-color:  #12243a;
+}
+
+.symbolBox p {
+	width: 50%;
+	display: inline-block;
+}
+
+.next5 {
+	display: none;
+}
+
+.moreInfoCSS {
+	background-color:  #12243a;
+	padding: 10px;
+}
+
+.moreInfoCSS *{
+	background-color:  #12243a;
 }

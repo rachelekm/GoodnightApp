@@ -7,18 +7,17 @@
 	<meta name='description' content='dream tracking and reporting app: dream log page'>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.css">
 	<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+	<link href="https://fonts.googleapis.com/css?family=Gothic+A1:100" rel="stylesheet">
 	<link rel="stylesheet" href="/main.css">
 </head>
 <body>
+	<header role='header' class='navigationBar'>
+			<button type='button' class='accountProfileNavButton' value='Go_to_Account_Profile'>Account</button>
+			<a href='dreamlog.html' hidden><button type='button' class='dreamLogNavButton' value='Go_to_Dream_Log'>Dream Log</button></a>
+			<a href='dreamreport.html'><button type='button' class='dreamReportNavButton' value='Go_to_Dream_Report'>Dream Report</button></a>
+			<a href='/accounthomepage.html'><button type='button' class='newEntryNavButton' value='Go_to_New_Dream_Entry'>New Entry</button></a>
+	</header>
 	<section role='main' id='main'>
-		<section id='accountHomepage'>
-			<div class='navigationBar'>
-				<button type='button' class='accountProfileNavButton' value='Go_to_Account_Profile'>Account</button>
-				<a href='dreamlog.html' hidden><button type='button' class='dreamLogNavButton' value='Go_to_Dream_Log'>Dream Log</button></a>
-				<a href='dreamreport.html'><button type='button' class='dreamReportNavButton' value='Go_to_Dream_Report'>Dream Report</button></a>
-				<a href='/accounthomepage.html'><button type='button' class='newEntryNavButton' value='Go_to_New_Dream_Entry'>New Entry</button></a>
-			</div>
-		</section>
 		<section id='accountProfileWindow' hidden>
 		</section>
 		<section id='pageContents'>
@@ -33,7 +32,6 @@
         		<button role="button" type="submit" class="dreamMoodSearchButton">Search</button>
         	</form>
 			<div id='dreamLog'>
-				<p>Its working!</p>
 			</div>
 			<div id='deleteEntryWarning' hidden></div>
 		</section>

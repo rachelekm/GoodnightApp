@@ -7,33 +7,32 @@
 	<meta name='description' content='dream tracking and reporting app'>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.css">
 	<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+	<link href="https://fonts.googleapis.com/css?family=Gothic+A1:100" rel="stylesheet">
 	<link rel="stylesheet" href="/main.css">
 </head>
 <body>
+	<header role='header' class='navigationBar'>
+			<button type='button' class='accountProfileNavButton' value='Go_to_Account_Profile'>Account</button>
+			<a href='dreamlog.html'><button type='button' class='dreamLogNavButton' value='Go_to_Dream_Log'>Dream Log</button></a>
+			<a href='dreamreport.html'><button type='button' class='dreamReportNavButton' value='Go_to_Dream_Report'>Dream Report</button></a>
+			<a href='/accounthomepage.html'><button type='button' class='newEntryNavButton' value='Go_to_New_Dream_Entry' hidden>New Entry</button></a>
+	</header>
 	<section role='main' id='main'>
-		<section role='header' id='accountHomepage'>
-			<div class='navigationBar'>
-				<button type='button' class='accountProfileNavButton' value='Go_to_Account_Profile'>Account</button>
-				<a href='dreamlog.html'><button type='button' class='dreamLogNavButton' value='Go_to_Dream_Log'>Dream Log</button></a>
-				<a href='dreamreport.html'><button type='button' class='dreamReportNavButton' value='Go_to_Dream_Report'>Dream Report</button></a>
-				<a href='/accounthomepage.html'><button type='button' class='newEntryNavButton' value='Go_to_New_Dream_Entry' hidden>New Entry</button></a>
-			</div>
-		</section>
 		<section id='accountProfileWindow' hidden>
 		</section>
 		<section id='pageContents'>
-			<form class="dreamEntryForm">New Entry
+			<form class="dreamEntryForm">
       			<fieldset class="newEntryFieldset">
-        		<legend>
-        		<input type='text' name='dreamContentInput' placeholder='Type your dream here...' aria-label="dream-entry-content-input" required></legend>
-        		<legend>What three symbols stuck out most?
+        		<legend class='dreamEntryLegend'>
+        		<input type='text' name='dreamContentInput' placeholder='Record your dream here...' aria-label="dream-entry-content-input" required></legend>
+        		<legend class='moreInfoForm' hidden>What three symbols stuck out most?
         		<input type='text' name='dreamKeywordsInput1' placeholder='keyword' aria-label="dream-keyword-input" required></legend>
-        		<legend>
-        		<input type='text' name='dreamKeywordsInput2' placeholder='keyword' aria-label="dream-keyword-input" required></legend>
-        		<legend>
-        		<input type='text' name='dreamKeywordsInput3' placeholder='keyword' aria-label="dream-keyword-input" required></legend>
-				<legend>How were you feeling yesterday?
-      			<select name='userMoodInput' placeholder='mood' aria-label="user-mood-input" multiple size='1' required>
+        		<legend class='moreInfoForm' hidden>
+        		<input type='text' name='dreamKeywordsInput2' placeholder='keyword' aria-label="dream-keyword-input"></legend>
+        		<legend class='moreInfoForm' hidden>
+        		<input type='text' name='dreamKeywordsInput3' placeholder='keyword' aria-label="dream-keyword-input"></legend>
+				<legend class='moreInfoForm' hidden>Select yesterday's mood:
+      			<select name='userMoodInput' placeholder='mood' aria-label="user-mood-input" multiple size='3' required>
       				<option value='happy'>Happy</option>
       				<option value='calm'>Calm</option>
       				<option value='lethargic'>Lethargic</option>
@@ -46,8 +45,9 @@
       				<option value='apathetic'>Apathetic</option>
       			</select></legend>
       			</fieldset>
-      			<button role="button" type="submit" class="submitButton">Submit</button>
+      			<button role="button" type="submit" class="submitButton" hidden>Submit</button>
     		</form>
+    		 <button role="button" type="button" class="moreInfoButton">more...</button>
 		</section>
 	</section>
 <script src="/clientside.js"></script>
