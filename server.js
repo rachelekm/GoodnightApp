@@ -14,6 +14,7 @@ const app = express();
 
 const { router: newUserRouter } = require('./users');
 const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
+const {router: dreamEntryRouter } = require('./dreams');
 
 app.use(morgan('common'));
 
@@ -38,7 +39,15 @@ passport.use(jwtStrategy);
 
 app.use('/signup', newUserRouter);
 app.use('/login', authRouter);
-
+app.use('/dreams', dreamEntryRouter); //rename /dreams
+/*app.get('/dream-report', (req, res)=>{
+  res.sendFile(__dirname + '/public/dreamreport.html');
+  return res.status(200);
+});
+app.get('/dream-log', (req, res)=>{
+  res.sendFile(__dirname + '/public/dreamlog.html');
+  return res.status(200);
+});*/
 
 let server;
 

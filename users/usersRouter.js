@@ -7,12 +7,10 @@ const jsonParser = bodyParser.json();
 const {User} = require('./models');
 
 router.post('/', jsonParser, (req, res) => {
-  console.log("anything");
-  console.log(req.body.username);
 	const requiredFields = ['username', 'password'];
-  	const missingField = requiredFields.find(field => !(field in req.body));
+  const missingField = requiredFields.find(field => !(field in req.body));
 
-  	if (missingField) {
+  if (missingField) {
     	return res.status(422).json({
       	code: 422,
       	reason: 'ValidationError',

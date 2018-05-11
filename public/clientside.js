@@ -1,6 +1,7 @@
 'use strict';
-let currentURL = window.location.href;;
-let JWT_USER = '';
+let currentURL = window.location.href;
+let currentPATH = window.location.pathname;
+let user_USERNAME = '';
 
 //client-side: finish dream report
 
@@ -48,10 +49,10 @@ function findMostCommonMood(mockDataWithSymbol){
 return finalArray;
 }
 
-function displaySymbolDetails(symbol, index){
+function displaySymbolDetails(data, symbol, index){
 	//GET INFO FILTERED BY SYMBOL
 	let mockDataWithSymbol = [];
-	MOCKDATA.dream_entries.forEach(object=> {
+	data.forEach(object=> {
 		object.keywords.forEach(item=>{
 			if(item === symbol){
 				mockDataWithSymbol.push(object);
@@ -80,11 +81,11 @@ function highestCount(a, b){
   return 0;
 }
 
-function findMostCommonKeywords(){
+function findMostCommonKeywords(dreams){
 	let allKeywords = [];
 	let uniqueKeywords = [];
 	let countedKeywords = [];
-	MOCKDATA.dream_entries.forEach(object => {
+	dreams.forEach(object => {
 		object.keywords.forEach(item => {
 			allKeywords.push(item);
 		});
@@ -104,12 +105,13 @@ function findMostCommonKeywords(){
 return countedKeywords.sort(highestCount);
 }
 
-function displayDreamReport(){
-	let keywords = findMostCommonKeywords();
+function displayDreamReport(data){
+	console.log(data);
+	let keywords = findMostCommonKeywords(data);
 	let numKeywords = keywords.length;
 	$('#dreamReport').append(`<div class='dreamSummary'>
 		<h1>Number of dreams recorded:</h1>
-		<p>${MOCKDATA.dream_entries.length}</p>
+		<p>${data.length}</p>
 		<h1>Most common dream symbols:</h1>
 		</div>`);
 	if(numKeywords > 5){
@@ -136,21 +138,14 @@ function displayDreamReport(){
 	}
 }
 
-function addNewDream(dream){
-	MOCKDATA.dream_entries.push(dream);
-	window.location.href = '/dreamlog.html';
-}
-
-function displayDreamLogFILTER(search, type){
-	//GET data with search query
+function displayDreamLogFILTER(data, type){
 	$('#dreamLog').empty();
-	if(MOCKDATA.dream_entries.length === 0){
+	if(data.length === 0){
 		$('#dreamLog').append(`<div class='dreamEntry'>No results for this search</div>`);
 	}
 	else if(type==='mood'){
-	MOCKDATA.dream_entries.forEach(object =>{
+	data.forEach(object =>{
 		let keywordsString = object.keywords.join(", ");
-		if(search in object.mood){
 		$('#dreamLog').append(`<div class='dreamEntry'>
 		<div class='dreamlogEntryButtons'>
 			<button type="button" class='editEntryButton'>Edit</button>
@@ -163,13 +158,11 @@ function displayDreamLogFILTER(search, type){
 		<h4>Dream Entry:</h4>
 		<p>${object.content}</p>
 		</div>`);
-		}
 	});
 	}
 	else if(type==='keyword'){
-		MOCKDATA.dream_entries.forEach(object =>{
+		data.forEach(object =>{
 		let keywordsString = object.keywords.join(", ");
-			if(keywordsString.includes(search)){
 		$('#dreamLog').append(`<div class='dreamEntry'>
 		<div class='dreamlogEntryButtons'>
 			<button type="button" class='editEntryButton'>Edit</button>
@@ -182,17 +175,17 @@ function displayDreamLogFILTER(search, type){
 		<h4>Dream Entry:</h4>
 		<p>${object.content}</p>
 		</div>`);
-				}
 		});
 	}
 }
 
-function displayDreamLogALL(){
-	if(MOCKDATA.dream_entries.length === 0){
+function displayDreamLog(data){
+	console.log(data);
+	if(data.length === 0){
 		$('#dreamLog').append(`<div class='dreamEntry'>No results for this search</div>`);
 	}
 	else{
-	MOCKDATA.dream_entries.forEach(object =>{
+	data.reverse().forEach(object =>{
 		let keywordsString = object.keywords.join(", ");
 		$('#dreamLog').append(`<div class='dreamEntry'>
 		<div class='dreamlogEntryButtons'>
@@ -210,17 +203,38 @@ function displayDreamLogALL(){
 	}
 }
 
+function getDreamData(){
+	if(currentPATH === '/dreams/dream-log'){
+	$.getJSON(`${currentURL}-all`, function(data){
+		displayDreamLog(data);
+	});
+	}
+}
+
+function setJWTHeader(xhr) {
+    xhr.setRequestHeader('Authorization', 'Bearer '+ localStorage.getItem('JWT_USER'));
+    xhr.setRequestHeader('Content-Type', 'application/json');
+}
+
 function displayNewEntryPage(){
-	window.location.href = '/accounthomepage.html';
+	history.pushState(null, null, '/dreams');
+	currentURL = window.location.href;
+	location.reload();
 }
 
 function updateJWT(data){
-	//history.pushState({id: 'account-homepage'}, 'Account Homepage', '/newentry');
-	JWT_USER = data.authToken;
+	localStorage.setItem('JWT_USER', data.authToken);
 	displayNewEntryPage();
 }
 
 function dreamReportPageListeners(){
+	let dreams;
+	if(currentPATH === '/dreams/dream-report'){
+		$.getJSON(`${currentURL}-all`, function(data){
+			dreams = data;
+			displayDreamReport(data);
+		});
+	}
 	$('#dreamReport').on('click', '.seeMoreKeywordsReport', function(){
 		$('#dreamReport').find('.seeMoreKeywordsReport').hide();
 		$('#dreamReport').find('.dreamSymbols .next5').removeClass('next5');
@@ -231,7 +245,7 @@ function dreamReportPageListeners(){
 		let index = $(this).next('div').attr('class').slice(-1);
 		console.log(index);
 		let targetSymbol = $(this).find('p').text();
-		displaySymbolDetails(targetSymbol, index);
+		displaySymbolDetails(dreams, targetSymbol, index);
 	})
 	$('#dreamReport').on('click', '.viewDreamSymbolsLog', function(){
 		/*setTimeout(function(){
@@ -246,19 +260,45 @@ function dreamReportPageListeners(){
 }
 
 function dreamLogPageListeners(){
+	getDreamData();
 	$('.searchDreamKeywordsForm').submit(event => {
 		event.preventDefault();
 		$('#dreamLog').empty();
 		let keywordSearch = $('input[name="dreamSearchKeywordInput"]').val();
 		console.log(keywordSearch);
-		displayDreamLogFILTER(keywordSearch, 'keyword');
+		$.ajax({
+			method: 'POST',
+			url: currentURL,
+			data: JSON.stringify({"searchKey": keywordSearch}), 
+			success: function(data){
+				displayDreamLogFILTER(data, 'keyword');
+			},
+			error: function(err){
+				console.log(err);
+			},
+			dataType: 'json',
+			beforeSend: setJWTHeader
+		});
 	});
 	$('.searchDreamMoodForm').submit(event => {
 		event.preventDefault();
 		$('#dreamLog').empty();
 		let moodSearch = $('input[name="dreamSearchMoodInput"]').val();
+		moodSearch = moodSearch.charAt(0).toUpperCase() + moodSearch.slice(1);
 		console.log(moodSearch);
-		displayDreamLogFILTER(moodSearch, 'mood');
+		$.ajax({
+			method: 'POST',
+			url: currentURL,
+			data: JSON.stringify({"searchMood": moodSearch}), 
+			success: function(data){
+				displayDreamLogFILTER(data, 'mood');
+			},
+			error: function(err){
+				console.log(err);
+			},
+			dataType: 'json',
+			beforeSend: setJWTHeader
+		});
 	});
 	$('#dreamLog').on('click', '.editEntryButton', event =>{
 		event.preventDefault();
@@ -288,51 +328,76 @@ function newEntryPageListeners(){
 	});
 	$('.dreamEntryForm').submit(event => {
 		event.preventDefault();
-		let newDream = $('input[name="dreamContentInput"]').val()
+		let newDream = $('input[name="dreamContentInput"]').val();
 		let keywords = [];
 		keywords.push($('input[name="dreamKeywordsInput1"]').val());
 		keywords.push($('input[name="dreamKeywordsInput2"]').val());
 		keywords.push($('input[name="dreamKeywordsInput3"]').val());
 		let userMood = $('select option:selected').text();
+		let newDate = new Date()
 		//must break out mood into array in case of mult selections
-		let newObject = {"_id": "1010101",
-			"user": "UserSchemaNew",
-			"submitDate": new Date(),
+		let newObject = {
+			"submitDate": newDate.toString(),
 			"keywords": keywords,
-			"mood": userMood, 
+			"mood": [userMood], 
 			"content": newDream
 			};
-		addNewDream(newObject);
+		console.log(newObject);
+		$.ajax({
+			method: 'POST',
+			url: currentURL,
+			data: JSON.stringify(newObject), 
+			success: function(data){
+				history.pushState(null, null, '/dreams/dream-log');
+				currentURL = window.location.href;
+				location.reload();
+			},
+			error: function(err){
+				console.log(err);
+			},
+			dataType: 'json',
+			beforeSend: setJWTHeader
+		});
 	});
 }
 
 function navigationButtonListeners(){
 	$('.accountProfileNavButton').on('click', function(event){
-		history.pushState({id: 'account-profile'}, 'Account Profile', '/accountprofile');
+		history.pushState(null, null, window.location.href + '/accountprofile');
+		//history.pushState({id: 'account-profile'}, 'Account Profile', '/accountprofile');
 		currentURL = window.location.href;
 		displayAccountProfile();
 	});
 	$('#accountProfileWindow').on('click', '.closeProfileWindow', event => {
 		event.preventDefault();
 		$('#accountProfileWindow').hide().empty();
+		let newPath = window.location.pathname.split('/')[1];
+		console.log(newPath);
+		history.pushState(null, null, `/${newPath}`);
+		currentURL = window.location.href;
 	});
-	displayDreamLogALL();
-	displayDreamReport();
-	/*	$('.navigationBar').on('click', '.dreamLogNavButton', function(event){
-		history.pushState({id: 'dream-log'}, 'Dream Log', '/dream-log');
+	$('.navigationBar').on('click', '.dreamLogNavButton', function(event){
+		event.preventDefault();
+		//event.preventDefault();
+		//history.pushState({id: 'dream-log'}, 'Dream Log', '/dream-log');
 		//GET LAST 10 dream entries
-		console.log('dream log works');
-		displayDreamLogALL();
+		//console.log('dream log works');
+		history.pushState(null, null, '/dreams/dream-log');
+		currentURL = window.location.href;
+		location.reload();
 	});
 	$('.navigationBar').on('click', '.dreamReportNavButton', function(event){
-		//history.pushState({id: 'dream-report'}, 'Dream Report', '/dream-report');
-		setTimeout(function() {displayDreamReport();}, 3000);
-	});
-	$('.newEntryNavButton').on('click', function(event){
-		history.pushState({id: 'new-entry'}, 'New Entry Page', '/newentry');
+		event.preventDefault();
+		history.pushState(null, null, '/dreams/dream-report');
 		currentURL = window.location.href;
-		displayNewEntryPage();
-	});*/
+		location.reload();
+	});
+	$('.navigationBar').on('click', '.newEntryNavButton', function(event){
+		event.preventDefault();
+		history.pushState(null, null, '/dreams');
+		currentURL = window.location.href;
+		location.reload();
+	});
 }
 
 function homePageButtonListeners(){
@@ -354,13 +419,13 @@ function homePageButtonListeners(){
 	});
 	$('.signUpForm').submit(event => {
 		event.preventDefault();
-		let username = $('input[aria-label="sign-up-form-username-input"]').val();
+		user_USERNAME = $('input[aria-label="sign-up-form-username-input"]').val();
 		let password = $('input[aria-label="sign-up-form-password-input"]').val();
 		console.log(currentURL);
 		$.ajax({
 			method: 'POST',
 			url: currentURL,
-			data: JSON.stringify({username: username, password: password}), 
+			data: JSON.stringify({username: user_USERNAME, password: password}), 
 			success: function(data){
 				updateJWT(data);
 			},
@@ -374,13 +439,14 @@ function homePageButtonListeners(){
 
 	$('.loginForm').submit(event => {
 		event.preventDefault();
-		let username = $('input[aria-label="login-form-username-input"]').val();
+		user_USERNAME = $('input[aria-label="login-form-username-input"]').val();
+		console.log(user_USERNAME);
 		let password = $('input[aria-label="login-form-password-input"]').val();
 		console.log(currentURL);
 		$.ajax({
 			method: 'POST',
 			url: currentURL,
-			data: JSON.stringify({username: username, password: password}), 
+			data: JSON.stringify({username: user_USERNAME, password: password}), 
 			success: function(data){
 				updateJWT(data);
 			},
