@@ -14,6 +14,7 @@ const app = express();
 
 const { router: newUserRouter } = require('./users');
 const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
+const {router: dreamEntryRouter } = require('./dreams');
 
 app.use(morgan('common'));
 
@@ -36,9 +37,9 @@ app.use(function (req, res, next) {
 passport.use(localStrategy);
 passport.use(jwtStrategy);
 
-app.use('/signup', newUserRouter);
+app.use('/account', newUserRouter);
 app.use('/login', authRouter);
-
+app.use('/dreams', dreamEntryRouter);
 
 let server;
 
