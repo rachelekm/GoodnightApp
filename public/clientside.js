@@ -144,7 +144,32 @@ return countedKeywords.sort(highestCount);
 }
 
 function displayDreamReport(data){
-	console.log(data, 'in display dream report function');
+	$('#calendar').fullCalendar({
+  		events: [
+    		{
+      		title: 'Event1',
+      		start: '2018-05-05',
+      		allDay: true,
+      		rendering: 'background'
+    		},
+    		{
+      		title: 'Event2',
+      		start: '2018-05-07',
+      		allDay: true,
+      		rendering: 'background'
+    		}
+    		// etc...
+  		],
+/*
+		eventClick: function(event) {
+			console.log('cal event!');
+    	}*/
+	
+  });
+$('#calendar').on('click', function(event){
+console.log($(this));
+});
+	console.log(data);
 	let keywords = findMostCommonKeywords(data);
 	let numKeywords = keywords.length;
 	$('#dreamReport').append(`<div class='dreamSummary'>
@@ -197,6 +222,7 @@ function displayDreamLogFILTER(data){
 		<p>${keywordsString}</p>
 		<h4 class='moodHeader'>Mood:</h4>
 		<p>${object.mood}</p>
+		<h4 class='nightmareHeader'>Nightmare:</h4><p>${object.nightmare}</p>
 		<h4 class='contentHeader'>Dream Entry:</h4>
 		<p>${object.content}</p>
 		</div>`);
@@ -241,6 +267,9 @@ function displayDreamLog(data){
 		<p>${keywordsString}</p>
 		<h4 class='moodHeader'>Mood:</h4>
 		<p>${object.mood}</p>
+		<h4 class='nightmareHeader'>Nightmare:</h4><p>${object.nightmare}</p>
+		<h4 class='lifeEventsHeader'>Themes of Importance or Worry at Time:</h4>
+		<p>${object.lifeEvents}</p>
 		<h4 class='contentHeader'>Dream Entry:</h4>
 		<p>${object.content}</p>
 		</div>`);
@@ -453,11 +482,19 @@ function dreamLogPageListeners(){
 }
 
 function newEntryPageListeners(){
-	$('.moreInfoButton').on('click', event => {
+	$('.moreInfoButton1').on('click', event => {
 		event.preventDefault();
 		$('input[name="dreamContentInput"]').animate({height:'100px'});
-		$('.moreInfoButton').hide();
-		$('.moreInfoForm').toggle();
+		$('.moreInfoButton1').hide();
+		$('.moreInfoButton2').show();
+		$('.moreInfoForm1').toggle();
+	});
+	$('.moreInfoButton2').on('click', event => {
+		event.preventDefault();
+		$('input[name="dreamContentInput"]').animate({height:'30px'});
+		$('.moreInfoForm1 input').animate({height:'20px'});
+		$('.moreInfoButton2').hide();
+		$('.moreInfoForm2').toggle();
 		$('.submitButton').toggle();
 	});
 	$('.dreamEntryForm').submit(event => {
@@ -467,16 +504,19 @@ function newEntryPageListeners(){
 		keywords.push($('input[name="dreamKeywordsInput1"]').val());
 		keywords.push($('input[name="dreamKeywordsInput2"]').val());
 		keywords.push($('input[name="dreamKeywordsInput3"]').val());
-		let userMood = $('select option:selected').text();
-		let newDate = new Date()
+		let userMood = $('select[name="userMoodInput"]').val();
+		let nightmare = $('input[type="radio"]:checked').val();
+		let newDate = new Date();
+		let userLifeThemes = $('select[name="userLifeEventsInput"]').val();
 		//must break out mood into array in case of mult selections
 		let newObject = {
 			'submitDate': newDate,
 			'keywords': keywords,
-			'mood': [userMood], 
+			'mood': userMood,
+			'nightmare': nightmare,
+			'lifeEvents': userLifeThemes,
 			'content': newDream
 			};
-		console.log(newObject);
 		$.ajax({
 			method: 'POST',
 			url: getEndpoint(),

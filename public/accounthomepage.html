@@ -25,14 +25,18 @@
       			<fieldset class="newEntryFieldset">
         		<legend class='dreamEntryLegend'>
         		<input type='text' name='dreamContentInput' placeholder='Record your dream here...' aria-label="dream-entry-content-input" required></legend>
-        		<legend class='moreInfoForm' hidden>What three symbols stuck out most?
+        		<legend class='moreInfoForm1' hidden>What three symbols stuck out most?
         		<input type='text' name='dreamKeywordsInput1' placeholder='keyword' aria-label="dream-keyword-input" required></legend>
-        		<legend class='moreInfoForm' hidden>
+        		<legend class='moreInfoForm1' hidden>
         		<input type='text' name='dreamKeywordsInput2' placeholder='keyword' aria-label="dream-keyword-input"></legend>
-        		<legend class='moreInfoForm' hidden>
+        		<legend class='moreInfoForm1' hidden>
         		<input type='text' name='dreamKeywordsInput3' placeholder='keyword' aria-label="dream-keyword-input"></legend>
-				<legend class='moreInfoForm' hidden>Select yesterday's mood:
-      			<select name='userMoodInput' placeholder='mood' aria-label="user-mood-input" multiple size='3' required>
+            <legend class='moreInfoForm1' hidden>Was this a nightmare?
+            <input type='radio' name='dreamTypeInput' value='yes' aria-label="dream-type-slection-option1"><label for='dreamTypeInput'>Yes</label>
+            <input type='radio' name='dreamTypeInput' value='no' aria-label="dream-type-slection-option2"><label for='dreamTypeInput'>No</label>
+            </legend>
+				<legend class='moreInfoForm2' hidden>Select how you feel below:
+      			<select name='userMoodInput' aria-label="user-mood-input" multiple size='3' required>
       				<option value='happy'>Happy</option>
       				<option value='calm'>Calm</option>
       				<option value='lethargic'>Lethargic</option>
@@ -44,10 +48,27 @@
       				<option value='nervous'>Nervous</option>
       				<option value='apathetic'>Apathetic</option>
       			</select></legend>
+            <legend class='moreInfoForm2' hidden>Select the below life themes you're currently giving significant thought or worry:
+            <select name='userLifeEventsInput' aria-label="user-life-events-input" multiple size='3' required>
+              <option value='Opportunities and Rrofessional Development'>Opportunities and Professional Development</option>
+              <option value='Sense of Purpose'>Sense of Purpose</option>
+              <option value='Home and Domestic Development'>Home and Domestic Development</option>
+              <option value='Family'>Family</option>
+              <option value='Relationships'>Relationships</option>
+              <option value='School or Work Expectations'>School or Work Expectations</option>
+              <option value='Creative Pursuits'>Creative Pursuits</option>
+              <option value='Security and Control'>Security and Control</option>
+              <option value='Religion or Spirituality'>Religion or Spirituality</option>
+              <option value='Health'>Health</option>
+              <option value='Money'>Money</option>
+              <option value='Aging'>Aging</option>
+              <option value='Physical Appearance'>Physical Appearance</option>
+            </select></legend>
       			</fieldset>
       			<button role="button" type="submit" class="submitButton" hidden>Submit</button>
     		</form>
-    		 <button role="button" type="button" class="moreInfoButton">more...</button>
+    		 <button role="button" type="button" class="moreInfoButton1">more...</button>
+         <button role="button" type="button" class="moreInfoButton2" hidden>more...</button>
 		</section>
 	</section>
 <script src="/clientside.js"></script>
