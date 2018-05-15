@@ -40,7 +40,7 @@ router.get('/', jwtAuth, (req, res)=>{
 });
 
 router.post('/', jsonParser, jwtAuth, (req, res) => {
-	const requiredFields = ['submitDate', 'keywords', 'mood', 'content'];
+	const requiredFields = ['submitDate', 'keywords', 'mood', 'nightmare', 'lifeEvents', 'content'];
   const missingField = requiredFields.find(field => !(field in req.body));
 
   if (missingField) {
@@ -59,6 +59,8 @@ router.post('/', jsonParser, jwtAuth, (req, res) => {
     submitDate: req.body.submitDate,
     keywords: req.body.keywords,
     mood: req.body.mood,
+    nightmare: req.body.nightmare,
+    lifeEvents: req.body.lifeEvents,
     content: req.body.content
 
   }).then(dream => {
@@ -74,7 +76,7 @@ router.post('/', jsonParser, jwtAuth, (req, res) => {
 });
 
 router.put('/:id', jsonParser, jwtAuth, (req, res) => {
-  const requiredFields = ['submitDate', 'keywords', 'mood', 'content'];
+  const requiredFields = ['submitDate', 'keywords', 'mood', 'nightmare', 'lifeEvents', 'content'];
   const newObject= {};
   requiredFields.forEach(field => {
     if(field in req.body){

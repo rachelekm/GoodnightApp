@@ -21,6 +21,12 @@ const dreamSchema = mongoose.Schema({
   mood: [{
     type: String
   }],
+  nightmare: {
+    type: String
+  },
+  lifeEvents: [{
+    type: String
+  }],
   content: {
     type: String,
     required: true
