@@ -1,23 +1,57 @@
 'use strict';
 let currentURL = window.location.href;
 let currentPATH = window.location.pathname;
+let API_ENDPOINT = `http://${currentURL.split('/')[2]}/dreams`;
 let user_USERNAME = '';
 
-//client-side: finish dream report
+//client-side: finish dream report, fix PUT endpoint error
 
-function displayAccountProfile(){
+function makePrettyDate(data){
+	let date = new Date(data);
+ 	return `${date.toString().substring(0,3)} ${date.toLocaleDateString()}`;
+}
+
+function displayAccountProfile(data){
+	console.log(data, 'in account profile function');
+	let newDate = makePrettyDate(data.accountCreated);
 	$('#accountProfileWindow').show().append(`<div class="accountProfile">
 		<button type='button' class='closeProfileWindow'>X</button>
-		<h1>Username</h1>
-		<h2>Account created:</h2>
-		<h2>Number of Entries:</h2>
+		<h1>${data.username}</h1>
+		<h2>${data.firstName} ${data.lastName}</h2>
+		<h2>Member since: ${newDate}</h2>
+		<button type='button' class='logOutOfAccount'>Log Out</button>
 		</div>`);
 }
 
-function deleteEntryWarning(){
+function deleteEntryWarning(id){
 	$('#deleteEntryWarning').show().append(`Are you sure you want to delete this entry?
-		<button type='button' class='deleteEntryConfirm'>YES</button>
+		<button type='button' class='deleteEntryConfirm' value=${id}>YES</button>
 		<button type='button' class='dontDeleteButton'>NO</button>`);
+}
+
+function createEditForm(objectInfo){
+	let keywordsArray = objectInfo.keywords.split(', ');
+	$('#editEntryWindow').show().attr("value", objectInfo.id).html(`<div class='dreamlogEntryButtons'>
+			<button type="button" class='exitEditEntryButton'>Exit Edit</button>			
+			</div>
+			<form class="editEntryForm">
+			    <h3>${objectInfo.date}</h3>
+      			<fieldset class="editEntryFieldset">
+      			<h4>Keywords:</h4>
+				<input type='text' name='dreamKeywordsInput1' value='${keywordsArray[0]}' aria-label="dream-keyword-input" required>
+        		<input type='text' name='dreamKeywordsInput2' value='${keywordsArray[1]}' aria-label="dream-keyword-input">
+        		<input type='text' name='dreamKeywordsInput3' value='${keywordsArray[2]}' aria-label="dream-keyword-input">
+				<h4>Mood:</h4>
+        		<input type='text' name='dreamMoodInput' value='${objectInfo.mood}' aria-label="dream-keyword-input">
+
+				<h4>Dream Entry:</h4>
+				<legend class='dreamEntryLegend'>
+        		<input type='text' name='dreamContentInput' value='${objectInfo.content}' aria-label="dream-entry-content-input" required>
+        		</legend>
+        		</fieldset>
+      			<button role="button" type="submit" class="editFormSubmitButton" hidden>Submit</button>
+    		</form>`
+        	);
 }
 
 function findMostCommonMood(mockDataWithSymbol){
@@ -66,12 +100,11 @@ function displaySymbolDetails(data, symbol, index){
 	}
 	$('#dreamReport').find(`.dreamSymbols .symbolsMoreInfoBox${index}`).empty().addClass('moreInfoCSS').append(
 		`<h4>Most likely dreamt of ${symbol} when feeling: ${moodArrayString}</h4>
-		<h4 class='dates'>Dates:</h4>
-		<button type='button' role='button' class='viewDreamSymbolsLog'>View Dreams with ${symbol}</button>`);
+		<h4 class='dates'>Dates:</h4>`);
 	mockDataWithSymbol.forEach(object=> {
-		let dateString = object.submitDate.split(' ', 4).join(" ");
+		let date = makePrettyDate(object.submitDate);
 		$('#dreamReport').find(`.symbolsMoreInfoBox${index} .dates`).append(
-			`<p>${dateString}</p>`);	
+			`<p>${date}</p>`);	
 	});
 }
 
@@ -106,7 +139,7 @@ return countedKeywords.sort(highestCount);
 }
 
 function displayDreamReport(data){
-	console.log(data);
+	console.log(data, 'in display dream report function');
 	let keywords = findMostCommonKeywords(data);
 	let numKeywords = keywords.length;
 	$('#dreamReport').append(`<div class='dreamSummary'>
@@ -138,28 +171,33 @@ function displayDreamReport(data){
 	}
 }
 
-function displayDreamLogFILTER(data, type){
+function displayDreamLogFILTER(data){
+	console.log(data, 'in display dream log filter function');
 	$('#dreamLog').empty();
+	$('input[name="dreamSearchMoodInput"]').val('');
+	$('input[name="dreamSearchKeywordInput"]').val('');
 	if(data.length === 0){
 		$('#dreamLog').append(`<div class='dreamEntry'>No results for this search</div>`);
 	}
-	else if(type==='mood'){
+	else{
 	data.forEach(object =>{
 		let keywordsString = object.keywords.join(", ");
-		$('#dreamLog').append(`<div class='dreamEntry'>
+		$('#dreamLog').append(`<div class='dreamEntry' value=${object._id}>
 		<div class='dreamlogEntryButtons'>
 			<button type="button" class='editEntryButton'>Edit</button>
 			<button type="button" class='deleteEntryButton'>Delete</button>
 		</div>
-		<h3>${object.submitDate}</h3>
-		<h4>Keywords:</h4>
+		<h3 class='dateHeader'>${object.submitDate}</h3>
+		<h4 class='keywordsHeader'>Keywords:</h4>
 		<p>${keywordsString}</p>
-		<h4>Mood: ${object.mood}</h4>
-		<h4>Dream Entry:</h4>
+		<h4 class='moodHeader'>Mood:</h4>
+		<p>${object.mood}</p>
+		<h4 class='contentHeader'>Dream Entry:</h4>
 		<p>${object.content}</p>
 		</div>`);
 	});
 	}
+	/*}
 	else if(type==='keyword'){
 		data.forEach(object =>{
 		let keywordsString = object.keywords.join(", ");
@@ -176,27 +214,29 @@ function displayDreamLogFILTER(data, type){
 		<p>${object.content}</p>
 		</div>`);
 		});
-	}
+	}*/
 }
 
 function displayDreamLog(data){
-	console.log(data);
+	console.log(data, 'in display dream log function');
 	if(data.length === 0){
 		$('#dreamLog').append(`<div class='dreamEntry'>No results for this search</div>`);
 	}
 	else{
 	data.reverse().forEach(object =>{
+		let date = new Date(object.submitDate);
 		let keywordsString = object.keywords.join(", ");
-		$('#dreamLog').append(`<div class='dreamEntry'>
+		$('#dreamLog').append(`<div class='dreamEntry' value=${object._id}>
 		<div class='dreamlogEntryButtons'>
 			<button type="button" class='editEntryButton'>Edit</button>
 			<button type="button" class='deleteEntryButton'>Delete</button>
 		</div>
-		<h3>${object.submitDate}</h3>
-		<h4>Keywords:</h4>
+		<h3 class='dateHeader'>${date.toString().substring(0,3)} ${date.toLocaleDateString()}</h3>
+		<h4 class='keywordsHeader'>Keywords:</h4>
 		<p>${keywordsString}</p>
-		<h4>Mood: ${object.mood}</h4>
-		<h4>Dream Entry:</h4>
+		<h4 class='moodHeader'>Mood:</h4>
+		<p>${object.mood}</p>
+		<h4 class='contentHeader'>Dream Entry:</h4>
 		<p>${object.content}</p>
 		</div>`);
 	});
@@ -204,11 +244,22 @@ function displayDreamLog(data){
 }
 
 function getDreamData(){
-	if(currentPATH === '/dreams/dream-log'){
-	$.getJSON(`${currentURL}-all`, function(data){
-		displayDreamLog(data);
-	});
+	if(currentPATH === '/dreamlog.html'){
+		$.ajax({
+			method: 'GET',
+			url: API_ENDPOINT,
+			success: displayDreamLog,
+			error: function(err){
+				console.log(err);
+			},
+			dataType: 'json',
+			beforeSend: setJWTHeader
+		});
 	}
+}
+
+function findSelectedID(selection){
+	return selection.parents('.dreamEntry')[0].attributes[1].value;
 }
 
 function setJWTHeader(xhr) {
@@ -217,22 +268,41 @@ function setJWTHeader(xhr) {
 }
 
 function displayNewEntryPage(){
-	history.pushState(null, null, '/dreams');
-	currentURL = window.location.href;
-	location.reload();
+	window.location.href = 'accounthomepage.html';
 }
 
-function updateJWT(data){
-	localStorage.setItem('JWT_USER', data.authToken);
-	displayNewEntryPage();
+function updateJWT(object){
+	$.ajax({
+		method: 'POST',
+		url: `${currentPATH}login`,
+		data: JSON.stringify(object), 
+		success: function(data){
+			localStorage.setItem('JWT_USER', data.authToken);
+			displayNewEntryPage();
+		},
+		error: function(err){
+			console.log(err);
+		},
+		dataType: 'json',
+		contentType: 'application/json'
+	});
 }
 
 function dreamReportPageListeners(){
 	let dreams;
-	if(currentPATH === '/dreams/dream-report'){
-		$.getJSON(`${currentURL}-all`, function(data){
-			dreams = data;
-			displayDreamReport(data);
+	if(currentPATH === '/dreamreport.html'){
+		$.ajax({
+			method: 'GET',
+			url: API_ENDPOINT,
+			success: function(data){
+				dreams = data;
+				displayDreamReport(data);
+			},
+			error: function(err){
+				console.log(err);
+			},
+			dataType: 'json',
+			beforeSend: setJWTHeader
 		});
 	}
 	$('#dreamReport').on('click', '.seeMoreKeywordsReport', function(){
@@ -246,29 +316,19 @@ function dreamReportPageListeners(){
 		console.log(index);
 		let targetSymbol = $(this).find('p').text();
 		displaySymbolDetails(dreams, targetSymbol, index);
-	})
-	$('#dreamReport').on('click', '.viewDreamSymbolsLog', function(){
-		/*setTimeout(function(){
-			$('#dreamLog').empty();
-			let symbolSearch = $(this).text().split(' ');
-			let string = symbolSearch.slice(3, symbolSearch.length).join(' ');
-			displayDreamLogFILTER(string, 'keyword');
-		}, 5000);
-				window.location.href = '/dreamlog.html';*/
-
 	});
 }
 
 function dreamLogPageListeners(){
 	getDreamData();
-	$('.searchDreamKeywordsForm').submit(event => {
+	/*$('.searchDreamKeywordsForm').submit(event => {
 		event.preventDefault();
 		$('#dreamLog').empty();
 		let keywordSearch = $('input[name="dreamSearchKeywordInput"]').val();
 		console.log(keywordSearch);
 		$.ajax({
 			method: 'POST',
-			url: currentURL,
+			url: `${API_ENDPOINT}/dream-log`,
 			data: JSON.stringify({"searchKey": keywordSearch}), 
 			success: function(data){
 				displayDreamLogFILTER(data, 'keyword');
@@ -279,19 +339,28 @@ function dreamLogPageListeners(){
 			dataType: 'json',
 			beforeSend: setJWTHeader
 		});
-	});
-	$('.searchDreamMoodForm').submit(event => {
+	});*/
+	$('.searchDreamForm').submit(event => {
 		event.preventDefault();
 		$('#dreamLog').empty();
+		let searchObj = {};
 		let moodSearch = $('input[name="dreamSearchMoodInput"]').val();
-		moodSearch = moodSearch.charAt(0).toUpperCase() + moodSearch.slice(1);
-		console.log(moodSearch);
+		let keywordSearch = $('input[name="dreamSearchKeywordInput"]').val();
+		console.log(keywordSearch, moodSearch);
+		if(moodSearch.length > 0 || moodSearch !== ''){
+			moodSearch = moodSearch.charAt(0).toUpperCase() + moodSearch.slice(1);
+			searchObj["searchMood"] = moodSearch;
+		}
+		if(keywordSearch !== '' || keywordSearch.length > 0){
+			searchObj["searchKey"] = keywordSearch;
+		}
+		console.log(searchObj);
 		$.ajax({
 			method: 'POST',
-			url: currentURL,
-			data: JSON.stringify({"searchMood": moodSearch}), 
+			url: `${API_ENDPOINT}/dream-log`,
+			data: JSON.stringify(searchObj), 
 			success: function(data){
-				displayDreamLogFILTER(data, 'mood');
+				displayDreamLogFILTER(data);
 			},
 			error: function(err){
 				console.log(err);
@@ -302,15 +371,75 @@ function dreamLogPageListeners(){
 	});
 	$('#dreamLog').on('click', '.editEntryButton', event =>{
 		event.preventDefault();
-		console.log('clicked edit');
+		let objId = findSelectedID($(event.currentTarget));
+		let textObject = {
+			id: objId,
+			date: $(`div[value='${objId}']`).find('.dateHeader').text(),
+			keywords: $(`div[value='${objId}']`).find('.keywordsHeader').next().text(),
+			mood: $(`div[value='${objId}']`).find('.moodHeader').next().text(),
+			content: $(`div[value='${objId}']`).find('.contentHeader').next().text()
+		}
+		createEditForm(textObject);
 	});
+	$('#editEntryWindow').on('click', '.editFormSubmitButton', event => {
+		event.preventDefault();
+		let id = $('#editEntryWindow').attr('value');
+		let newDream = $('#editEntryWindow').find('input[name="dreamContentInput"]').val();
+		let objDate = $('#editEntryWindow').find('h3').text();
+		let keywords = [];
+		keywords.push($('#editEntryWindow').find('input[name="dreamKeywordsInput1"]').val());
+		keywords.push($('#editEntryWindow').find('input[name="dreamKeywordsInput2"]').val());
+		keywords.push($('#editEntryWindow').find('input[name="dreamKeywordsInput3"]').val());
+		let userMood = $('#editEntryWindow').find('input[name="dreamMoodInput"]').val();
+		//must break out mood into array in case of mult selections
+		let newObject = {
+			'id': id,
+			'submitDate': new Date(objDate),
+			'keywords': keywords,
+			'mood': [userMood], 
+			'content': newDream
+			};
+		$.ajax({
+			method: 'PUT',
+			url: `${API_ENDPOINT}/${id}`,
+			data: JSON.stringify(newObject), 
+			success: function(){
+				console.log('made it to success');
+				$('#editEntryWindow').hide();
+				location.reload();
+			},
+			error: function(err){
+				console.log(err);
+			},
+			dataType: 'json',
+			beforeSend: setJWTHeader
+		});
+	});
+	$('#editEntryWindow').on('click', '.exitEditEntryButton', event => {
+		event.preventDefault();
+		$('#editEntryWindow').hide();
+	})
 	$('#dreamLog').on('click', '.deleteEntryButton', event =>{
-		event.preventDefault();		
-		console.log('clicked delete');
-		deleteEntryWarning();
+		event.preventDefault();	
+		deleteEntryWarning(findSelectedID($(event.currentTarget)));
 	});
 	$('#pageContents').on('click', '.deleteEntryConfirm', event =>{
 		event.preventDefault();	
+		let id = $('#deleteEntryWarning').find('.deleteEntryConfirm').val();
+		$.ajax({
+			method: 'DELETE',
+			url: `${API_ENDPOINT}/${id}`,
+			success: function(){
+				console.log('made it to success');
+				$('#deleteEntryWarning').empty().hide();
+				location.reload();
+			},
+			error: function(err){
+				console.log(err);
+			},
+			//dataType: 'json',
+			beforeSend: setJWTHeader
+		});
 	});
 	$('#pageContents').on('click', '.dontDeleteButton', event =>{
 		event.preventDefault();	
@@ -337,18 +466,18 @@ function newEntryPageListeners(){
 		let newDate = new Date()
 		//must break out mood into array in case of mult selections
 		let newObject = {
-			"submitDate": newDate.toString(),
-			"keywords": keywords,
-			"mood": [userMood], 
-			"content": newDream
+			'submitDate': newDate,
+			'keywords': keywords,
+			'mood': [userMood], 
+			'content': newDream
 			};
 		console.log(newObject);
 		$.ajax({
 			method: 'POST',
-			url: currentURL,
+			url: API_ENDPOINT,
 			data: JSON.stringify(newObject), 
 			success: function(data){
-				history.pushState(null, null, '/dreams/dream-log');
+				history.pushState(null, null, '/dreamlog.html');
 				currentURL = window.location.href;
 				location.reload();
 			},
@@ -363,19 +492,33 @@ function newEntryPageListeners(){
 
 function navigationButtonListeners(){
 	$('.accountProfileNavButton').on('click', function(event){
-		history.pushState(null, null, window.location.href + '/accountprofile');
-		//history.pushState({id: 'account-profile'}, 'Account Profile', '/accountprofile');
-		currentURL = window.location.href;
-		displayAccountProfile();
+		let current = window.location.href.split("/");
+		let refreshPath = current.pop();
+		$.ajax({
+			method: 'GET',
+			url: `${current.join('/')}/account`,
+			//data: JSON.stringify(newObject), 
+			success: displayAccountProfile,
+			error: function(err){
+				console.log(err);
+			},
+			dataType: 'json',
+			beforeSend: setJWTHeader
+		});
 	});
 	$('#accountProfileWindow').on('click', '.closeProfileWindow', event => {
 		event.preventDefault();
 		$('#accountProfileWindow').hide().empty();
-		let newPath = window.location.pathname.split('/')[1];
+		/*let newPath = window.location.pathname.split('/')[1];
 		console.log(newPath);
 		history.pushState(null, null, `/${newPath}`);
-		currentURL = window.location.href;
+		currentURL = window.location.href;*/
 	});
+	$('#accountProfileWindow').on('click', '.logOutOfAccount', event => {
+		event.preventDefault();
+		localStorage.removeItem('JWT_USER');
+		window.location.href = '/';
+	});/*
 	$('.navigationBar').on('click', '.dreamLogNavButton', function(event){
 		event.preventDefault();
 		//event.preventDefault();
@@ -397,7 +540,7 @@ function navigationButtonListeners(){
 		history.pushState(null, null, '/dreams');
 		currentURL = window.location.href;
 		location.reload();
-	});
+	});*/
 }
 
 function homePageButtonListeners(){
@@ -421,13 +564,14 @@ function homePageButtonListeners(){
 		event.preventDefault();
 		user_USERNAME = $('input[aria-label="sign-up-form-username-input"]').val();
 		let password = $('input[aria-label="sign-up-form-password-input"]').val();
-		console.log(currentURL);
+		let first_Name = $('input[aria-label="sign-up-form-first-name-input"]').val().toString();
+		let last_Name = $('input[aria-label="sign-up-form-last-name-input"]').val().toString();
 		$.ajax({
 			method: 'POST',
-			url: currentURL,
-			data: JSON.stringify({username: user_USERNAME, password: password}), 
+			url: `${currentPATH}account`,
+			data: JSON.stringify({username: user_USERNAME, password: password, firstName: first_Name, lastName: last_Name}), 
 			success: function(data){
-				updateJWT(data);
+				updateJWT({username: user_USERNAME, password: password});
 			},
 			error: function(err){
 				console.log(err);
@@ -440,22 +584,8 @@ function homePageButtonListeners(){
 	$('.loginForm').submit(event => {
 		event.preventDefault();
 		user_USERNAME = $('input[aria-label="login-form-username-input"]').val();
-		console.log(user_USERNAME);
 		let password = $('input[aria-label="login-form-password-input"]').val();
-		console.log(currentURL);
-		$.ajax({
-			method: 'POST',
-			url: currentURL,
-			data: JSON.stringify({username: user_USERNAME, password: password}), 
-			success: function(data){
-				updateJWT(data);
-			},
-			error: function(err){
-				console.log(err);
-			},
-			dataType: 'json',
-			contentType: 'application/json'
-		});
+		updateJWT({username: user_USERNAME, password: password});
 	});
 }
 

@@ -13,12 +13,26 @@ const UserSchema = mongoose.Schema({
   password: {
     type: String,
     required: true
+  },
+  firstName: {
+    type: String,
+    required: true
+  },
+  lastName: {
+    type: String,
+    required: true
+  },
+  accountCreated: {
+    type: Date
   }
 });
 
 UserSchema.methods.serialize = function() {
 	return {username: this.username || '',
-  id: this.id || ''};
+  firstName: this.firstName,
+  lastName: this.lastName,
+  id: this.id || '',
+  accountCreated: this.accountCreated || ''};
 }
 
 UserSchema.methods.validatePassword = function(password) {

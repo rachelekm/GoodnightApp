@@ -37,17 +37,9 @@ app.use(function (req, res, next) {
 passport.use(localStrategy);
 passport.use(jwtStrategy);
 
-app.use('/signup', newUserRouter);
+app.use('/account', newUserRouter);
 app.use('/login', authRouter);
-app.use('/dreams', dreamEntryRouter); //rename /dreams
-/*app.get('/dream-report', (req, res)=>{
-  res.sendFile(__dirname + '/public/dreamreport.html');
-  return res.status(200);
-});
-app.get('/dream-log', (req, res)=>{
-  res.sendFile(__dirname + '/public/dreamlog.html');
-  return res.status(200);
-});*/
+app.use('/dreams', dreamEntryRouter);
 
 let server;
 

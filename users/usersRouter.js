@@ -3,11 +3,16 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const router = express.Router();
 const jsonParser = bodyParser.json();
+const passport = require('passport');
+
+const { router: authRouter, localStrategy, jwtStrategy } = require('../auth');
+passport.use(jwtStrategy);
+const jwtAuth = passport.authenticate('jwt', { session: false });
 
 const {User} = require('./models');
 
 router.post('/', jsonParser, (req, res) => {
-	const requiredFields = ['username', 'password'];
+	const requiredFields = ['username', 'password', 'firstName', 'lastName'];
   const missingField = requiredFields.find(field => !(field in req.body));
 
   if (missingField) {
@@ -19,7 +24,7 @@ router.post('/', jsonParser, (req, res) => {
     	});
   	}
 
-	const stringFields = ['username', 'password'];
+	const stringFields = ['username', 'password', 'firstName', 'lastName'];
   	const nonStringField = stringFields.find(
     	field => field in req.body && typeof req.body[field] !== 'string'
   	);
@@ -33,7 +38,7 @@ router.post('/', jsonParser, (req, res) => {
     	});
   	}
 
-  	const trimmedFields = ['username', 'password'];
+  	const trimmedFields = ['username', 'password', 'firstName', 'lastName'];
   	const nonTrimmedField = trimmedFields.find(
     	field => req.body[field].trim() !== req.body[field]
   	);
@@ -80,7 +85,7 @@ router.post('/', jsonParser, (req, res) => {
     	});
   	}
 
-  let {username, password} = req.body;
+  let {username, password, firstName, lastName} = req.body;
 
   return User.find({username})
     .count()
@@ -98,8 +103,10 @@ router.post('/', jsonParser, (req, res) => {
     .then(hash => {
       return User.create({
         username,
+        firstName,
+        lastName,
         password: hash,
-        dream_log: []
+        accountCreated: new Date()
       });
     })
     .then(user => {
@@ -107,18 +114,24 @@ router.post('/', jsonParser, (req, res) => {
 ;
     })
     .catch(err => {
+      console.log(err);
       if (err.reason === 'ValidationError') {
         return res.status(err.code).json(err);
       }
-      res.status(500).json({code: 500, message: 'Internal server error'});
+      res.status(500).json({code: 500, message: 'Internal server error', error: err});
     });
 });
 
-
-router.get('/', (req, res) => {
-  return User.find()
-    .then(users => res.json(users.map(user => user.serialize())))
-    .catch(err => res.status(500).json({message: 'Internal server error'}));
+router.get('/', jwtAuth, (req, res) => {
+  const userID = req.user.id;
+  User.findById(userID)
+  .then(function(user){
+    res.json(user.serialize())
+  })
+  .catch(err => {
+    console.log(err);
+        res.status(500).json({ message: 'Internal server error' });
+  });
 });
 
 module.exports = {router};

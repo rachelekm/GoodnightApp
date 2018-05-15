@@ -11,7 +11,7 @@ passport.use(jwtStrategy);
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
 const {dreamEntry} = require('./models');
-
+/*
 router.get('/', (req, res)=>{
   res.sendFile(path.join(__dirname, '..', '/public/accounthomepage.html'));
   return res.status(200);
@@ -23,6 +23,20 @@ router.get('/dream-log', (req, res)=>{
 
 router.get('/dream-report', (req, res)=>{
   return res.status(200).sendFile(path.join(__dirname, '..', '/public/dreamreport.html'));
+});*/
+
+router.get('/', jwtAuth, (req, res)=>{
+  let user = req.user.id;
+  return dreamEntry.find({user: user}).populate('user').then(dreams => {
+      return res.status(200).json(dreams.map(entry=>entry.serialize()));//.map(entry => {entry.serialize();}));
+    })
+    .catch(err => {
+      console.log(err);
+      if (err.reason === 'ValidationError') {
+        return res.status(err.code).json(err);
+      }
+      res.status(500).json({code: 500, message: 'Internal server error'});
+    });
 });
 
 router.post('/', jsonParser, jwtAuth, (req, res) => {
@@ -59,32 +73,74 @@ router.post('/', jsonParser, jwtAuth, (req, res) => {
     });
 });
 
-router.get('/dream-log-all', (req, res)=>{
+router.put('/:id', jsonParser, jwtAuth, (req, res) => {
+  const requiredFields = ['submitDate', 'keywords', 'mood', 'content'];
+  const newObject= {};
+  requiredFields.forEach(field => {
+    if(field in req.body){
+      newObject[field] = req.body[field];
+    }
+  });
+  /*for(let i=0; i<requiredFields.length; i++){
+    if(!(requiredFields[i] in req.body)){
+          const message = `Missing \`${requiredFields[i]}\` in request body`;
+          console.error(message);
+          return res.status(400).send(message);
+    }
+  }*/
+  if(req.body.id !== req.params.id){
+        const message = `Request path id (${req.params.id}) and request body id (${req.body.id}) must match`;
+        console.error(message);
+        return res.status(400).send(message);
+  }
+  dreamEntry.findByIdAndUpdate(req.params.id,
+    {$set: newObject})
+  .then(function(entry){
+    res.status(204).end()})
+  .catch(err => {
+    console.log(err);
+    res.status(500).json({message: 'Internal server error'})
+  });
+});
 
-  return dreamEntry.find().then(dreams => {
-      return res.status(200).json(dreams.map(entry=>entry.serialize()));//.map(entry => {entry.serialize();}));
-    })
-    .catch(err => {
-      console.log(err);
-      if (err.reason === 'ValidationError') {
-        return res.status(err.code).json(err);
-      }
-      res.status(500).json({code: 500, message: 'Internal server error'});
-    });
+router.delete('/:id', jsonParser, jwtAuth, (req, res) => {
+  dreamEntry.findByIdAndRemove(req.params.id)
+  .then(dream => {
+  console.log(`Deleted dream entry ID: ${req.params.id}`);
+  res.status(204).end();
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).json({message: 'Internal server error'})
+  });
 });
 
 router.post('/dream-log', jsonParser, jwtAuth, (req, res) => {
-
-  if(Object.keys(req.body) == 'searchKey'){
-  return dreamEntry.find({"keywords": req.body.searchKey}).then(function(entries){
+  let searchObj = {};
+  Object.keys(req.body).forEach(key=>{
+      if(key == 'searchKey'){
+        searchObj["keywords"] = req.body.searchKey;
+      }
+      else if(key == 'searchMood'){
+        searchObj["mood"] = req.body.searchMood;
+      }
+     // else if(key == 'searchDate'){
+     //   searchObj["submitDate"] = req.body.searchDate;
+     // }
+    });
+//make one object
+  return dreamEntry.find(searchObj).then(function(entries){
     return res.status(200).json(entries);
   })
   .catch(err => {
     console.log(err);
-        return res.status(500).json({ message: 'Internal server error' });
+    if (err.reason === 'ValidationError') {
+        return res.status(err.code).json(err);
+      }
+    return res.status(500).json({ message: 'Internal server error' });
   });
-  }
-  if(Object.keys(req.body) == 'searchMood'){
+  //}
+/*  if(Object.keys(req.body) == 'searchMood'){
     return dreamEntry.find({"mood": req.body.searchMood}).then(function(entries){
       return res.status(200).json(entries);
     })
@@ -93,7 +149,7 @@ router.post('/dream-log', jsonParser, jwtAuth, (req, res) => {
         return res.status(500).json({ message: 'Internal server error' });
     });
   }
-
+//add whitespace trimming
   if(req.body.searchMood == '' || req.body.searchKey == ' ' || req.body.searchMood == ' ' || req.body.searchKey == ''){
     return dreamEntry.find().then(dreams => {
       return res.status(200).json(dreams.map(entry=>entry.serialize()));//.map(entry => {entry.serialize();}));
@@ -105,21 +161,7 @@ router.post('/dream-log', jsonParser, jwtAuth, (req, res) => {
       }
       res.status(500).json({code: 500, message: 'Internal server error'});
     });
-  }
-});
-
-router.get('/dream-report-all', (req, res)=>{
-
-  return dreamEntry.find().then(dreams => {
-      return res.status(200).json(dreams.map(entry=>entry.serialize()));//.map(entry => {entry.serialize();}));
-    })
-    .catch(err => {
-      console.log(err);
-      if (err.reason === 'ValidationError') {
-        return res.status(err.code).json(err);
-      }
-      res.status(500).json({code: 500, message: 'Internal server error'});
-    });
+  }*/
 });
 
 module.exports = {router};

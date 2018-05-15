@@ -11,9 +11,10 @@ const dreamSchema = mongoose.Schema({
     required: true
   },
   submitDate: {
-    type: String,
+    type: Date,
     required: true
   },
+  //time you woke up, type: DAte
   keywords: [{
     type: String
   }],
@@ -27,10 +28,11 @@ const dreamSchema = mongoose.Schema({
 });
 
 dreamSchema.methods.serialize = function() {
-	return {submitDate: this.submitDate || '',
+	return this;/*{id: this.id || '',
+  submitDate: this.submitDate || '',
   keywords: this.keywords || '', 
   mood: this.mood || '',
-  content: this.content || ''};
+  content: this.content || ''};*/
 }
 
 const dreamEntry = mongoose.model('dreamEntry', dreamSchema);
