@@ -1,10 +1,15 @@
 'use strict';
 let currentURL = window.location.href;
 let currentPATH = window.location.pathname;
-let API_ENDPOINT = `http://${currentURL.split('/')[2]}/dreams`;
 let user_USERNAME = '';
 
 //client-side: finish dream report, fix PUT endpoint error
+
+function getEndpoint(){
+	let API_ENDPOINT = window.location.href.split("/");
+	let refreshPath = API_ENDPOINT.pop();
+	return `${API_ENDPOINT.join('/')}/dreams`;
+}
 
 function makePrettyDate(data){
 	let date = new Date(data);
@@ -247,7 +252,7 @@ function getDreamData(){
 	if(currentPATH === '/dreamlog.html'){
 		$.ajax({
 			method: 'GET',
-			url: API_ENDPOINT,
+			url: getEndpoint(),
 			success: displayDreamLog,
 			error: function(err){
 				console.log(err);
@@ -293,7 +298,7 @@ function dreamReportPageListeners(){
 	if(currentPATH === '/dreamreport.html'){
 		$.ajax({
 			method: 'GET',
-			url: API_ENDPOINT,
+			url: getEndpoint(),
 			success: function(data){
 				dreams = data;
 				displayDreamReport(data);
@@ -357,7 +362,7 @@ function dreamLogPageListeners(){
 		console.log(searchObj);
 		$.ajax({
 			method: 'POST',
-			url: `${API_ENDPOINT}/dream-log`,
+			url: `${getEndpoint()}/dream-log`,
 			data: JSON.stringify(searchObj), 
 			success: function(data){
 				displayDreamLogFILTER(data);
@@ -401,7 +406,7 @@ function dreamLogPageListeners(){
 			};
 		$.ajax({
 			method: 'PUT',
-			url: `${API_ENDPOINT}/${id}`,
+			url: `${getEndpoint()}/${id}`,
 			data: JSON.stringify(newObject), 
 			success: function(){
 				console.log('made it to success');
@@ -428,7 +433,7 @@ function dreamLogPageListeners(){
 		let id = $('#deleteEntryWarning').find('.deleteEntryConfirm').val();
 		$.ajax({
 			method: 'DELETE',
-			url: `${API_ENDPOINT}/${id}`,
+			url: `${getEndpoint()}/${id}`,
 			success: function(){
 				console.log('made it to success');
 				$('#deleteEntryWarning').empty().hide();
@@ -474,7 +479,7 @@ function newEntryPageListeners(){
 		console.log(newObject);
 		$.ajax({
 			method: 'POST',
-			url: API_ENDPOINT,
+			url: getEndpoint(),
 			data: JSON.stringify(newObject), 
 			success: function(data){
 				history.pushState(null, null, '/dreamlog.html');
