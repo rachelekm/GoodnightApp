@@ -13,29 +13,31 @@
 <body>
 	<header role='header' class='navigationBar'>
 			<button type='button' class='accountProfileNavButton' value='Go_to_Account_Profile'>Account</button>
-			<a href='dreamlog.html'><button type='button' class='dreamLogNavButton' value='Go_to_Dream_Log'>Dream Log</button></a>
-			<a href='dreamreport.html'><button type='button' class='dreamReportNavButton' value='Go_to_Dream_Report'>Dream Report</button></a>
-			<a href='/accounthomepage.html'><button type='button' class='newEntryNavButton' value='Go_to_New_Dream_Entry' hidden>New Entry</button></a>
+			<a href='dreamlog.html'><button type='button' class='dreamLogNavButton' value='Go_to_Dream_Log'>View All</button></a>
+			<a href='dreamreport.html'><button type='button' class='dreamReportNavButton' value='Go_to_Dream_Report'>Home</button></a>
+			<a href='/newentry.html'><button type='button' class='newEntryNavButton' value='Go_to_New_Dream_Entry'>New Dream</button></a>
 	</header>
+  <section id='accountProfileWindow' hidden>
+    </section>
 	<section role='main' id='main'>
-		<section id='accountProfileWindow' hidden>
-		</section>
 		<section id='pageContents'>
 			<form class="dreamEntryForm">
       			<fieldset class="newEntryFieldset">
         		<legend class='dreamEntryLegend'>
-        		<input type='text' name='dreamContentInput' placeholder='Record your dream here...' aria-label="dream-entry-content-input" required></legend>
+        		<textarea type='text' name='dreamContentInput' placeholder='Record your dream here...' aria-label="dream-entry-content-input" wrap='soft' required></textarea></legend>
         		<legend class='moreInfoForm1' hidden>What three symbols stuck out most?
-        		<input type='text' name='dreamKeywordsInput1' placeholder='keyword' aria-label="dream-keyword-input" required></legend>
+
+        		<input type='text' name='dreamKeywordsInput1' placeholder='1.' aria-label="dream-keyword-input" required></legend>
         		<legend class='moreInfoForm1' hidden>
-        		<input type='text' name='dreamKeywordsInput2' placeholder='keyword' aria-label="dream-keyword-input"></legend>
+        		<input type='text' name='dreamKeywordsInput2' placeholder='2.' aria-label="dream-keyword-input"></legend>
         		<legend class='moreInfoForm1' hidden>
-        		<input type='text' name='dreamKeywordsInput3' placeholder='keyword' aria-label="dream-keyword-input"></legend>
+        		<input type='text' name='dreamKeywordsInput3' placeholder='3.' aria-label="dream-keyword-input"></legend>
             <legend class='moreInfoForm1' hidden>Was this a nightmare?
             <input type='radio' name='dreamTypeInput' value='yes' aria-label="dream-type-slection-option1"><label for='dreamTypeInput'>Yes</label>
             <input type='radio' name='dreamTypeInput' value='no' aria-label="dream-type-slection-option2"><label for='dreamTypeInput'>No</label>
             </legend>
 				<legend class='moreInfoForm2' hidden>Select how you feel below:
+
       			<select name='userMoodInput' aria-label="user-mood-input" multiple size='3' required>
       				<option value='happy'>Happy</option>
       				<option value='calm'>Calm</option>
@@ -49,6 +51,7 @@
       				<option value='apathetic'>Apathetic</option>
       			</select></legend>
             <legend class='moreInfoForm2' hidden>Select the below life themes you're currently giving significant thought or worry:
+
             <select name='userLifeEventsInput' aria-label="user-life-events-input" multiple size='3' required>
               <option value='Opportunities and Rrofessional Development'>Opportunities and Professional Development</option>
               <option value='Sense of Purpose'>Sense of Purpose</option>
@@ -65,10 +68,10 @@
               <option value='Physical Appearance'>Physical Appearance</option>
             </select></legend>
       			</fieldset>
-      			<button role="button" type="submit" class="submitButton" hidden>Submit</button>
+      			<button role="button" type="submit" class="submitButton" hidden>Add to Dream Bank</button>
     		</form>
-    		 <button role="button" type="button" class="moreInfoButton1">more...</button>
-         <button role="button" type="button" class="moreInfoButton2" hidden>more...</button>
+    		 <button role="button" type="button" class="moreInfoButton1"><img src='https://i.imgur.com/NDE1kFX.png?1'/></button>
+         <button role="button" type="button" class="moreInfoButton2" hidden><img src='https://i.imgur.com/NDE1kFX.png?1'/></button>
 		</section>
 	</section>
 <script src="/clientside.js"></script>

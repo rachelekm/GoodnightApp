@@ -13,20 +13,21 @@
 <body>
 	<header role='header' class='navigationBar'>
 			<button type='button' class='accountProfileNavButton' value='Go_to_Account_Profile'>Account</button>
-			<a href='dreamlog.html' hidden><button type='button' class='dreamLogNavButton' value='Go_to_Dream_Log'>Dream Log</button></a>
-			<a href='dreamreport.html'><button type='button' class='dreamReportNavButton' value='Go_to_Dream_Report'>Dream Report</button></a>
-			<a href='/accounthomepage.html'><button type='button' class='newEntryNavButton' value='Go_to_New_Dream_Entry'>New Entry</button></a>
+			<a href='dreamlog.html'><button type='button' class='dreamLogNavButton' value='Go_to_Dream_Log'>View All</button></a>
+			<a href='dreamreport.html'><button type='button' class='dreamReportNavButton' value='Go_to_Dream_Report'>Home</button></a>
+			<a href='/newentry.html'><button type='button' class='newEntryNavButton' value='Go_to_New_Dream_Entry'>New Dream</button></a>
 	</header>
+	<section id='accountProfileWindow' hidden>
+	</section>
 	<section role='main' id='main'>
-		<section id='accountProfileWindow' hidden>
-		</section>
 		<section id='pageContents'>
 			<form class="searchDreamForm">
+				<div class=searchBar>
         		<legend>
-        		<input type='text' name='dreamSearchKeywordInput' placeholder='Search by dream keywords' aria-label="dream-keyword-search-input"></legend>
-				<legend>
+        		<input type='text' name='dreamSearchKeywordInput' placeholder='Search by dream keywords' aria-label="dream-keyword-search-input">
         		<input type='text' name='dreamSearchMoodInput' placeholder='Search by mood' aria-label="mood-search-input"></legend>
-        		<button role="button" type="submit" class="dreamSearchButton">Search</button>
+        		<button role="button" type="submit" class="dreamSearchButton"><img src='https://i.imgur.com/ZrgKJGB.png'/></button>
+        	</div>
         	</form>
 			<div id='dreamLog'>
 			</div>
