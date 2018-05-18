@@ -1,4 +1,4 @@
-const chai = require('chai');
+/*const chai = require('chai');
 const chaiHttp = require('chai-http');
 
 const {app, runServer, closeServer} = require('../server');
@@ -171,5 +171,5 @@ it('should delete recipe item by id on DELETE', function() {
   })
   .then(function(res) {
     expect(res).to.have.status(204);
-  });*/
-});
+  });
+});*/
