@@ -13,21 +13,54 @@ main background color: #16283f;
 	padding: 20px;
 }
 
+#homepage h1 {
+	text-align: center;
+}
+
 .createAccountButton, .loginAccountButton {
 	position: relative;
 	display: inline-block;
-	width: 40%;
+	width: 50%;
+	margin-top: 10px;
 	float: left;
 	border: none;
 	color: white;
 }
 
+.selected {
+	background-color: #c5d5e2;
+	color: #12243a;
+}
+
+#pageContents {
+	text-align: center;
+}
+
 .loginForm, .signUpForm {
 	position: relative;
 	float: left;
+	text-align: center;
 	background-color: #12243a;
-	width: 80%;
+	width: 100%;
+	margin-top: 10px;
 	padding: 20px;
+	font-weight: 100;
+}
+
+.signupLink, .loginLink {
+	font-size: 13px;
+	border: none;
+	background-color: #12243a;
+	color: #D4E4F2;
+}
+
+#homepage .submitButton {
+	margin: 10px;
+	font-size: 14px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	padding-left: 20px;
+	padding-right: 20px;
 }
 
 .loginForm fieldset, .signUpForm fieldset, .loginForm input, .signUpForm input, .loginForm legend, .signUpForm legend{
@@ -35,6 +68,10 @@ main background color: #16283f;
 	border: none;
 	color: white;
 	width: 100%;
+}
+
+.loginForm input::placeholder, .signUpForm input::placeholder{
+	color: #c5d5e2;
 }
 
 .loginForm fieldset, .signUpForm fieldset {
@@ -45,15 +82,18 @@ main background color: #16283f;
 
 .loginForm input, .signUpForm input {
 	padding: 10px;
+	padding-left: 2px;
 	margin: 3px;
 	border-bottom: 1px solid white;
 	width: 100%;
 }
 
-.loginForm button, .signUpForm button {
+.loginForm .submitButton, .signUpForm .submitButton, .dreamEntryForm .submitButton {
 	background-color: #12243a;
-	border: none;
-	color: white;
+	padding: 10px;
+	border-radius: 4px;
+	border: 1px solid #D4E4F2;
+	color: #D4E4F2;
 }
 
 .navigationBar {
@@ -66,7 +106,7 @@ main background color: #16283f;
 }
 
 .navigationBar button {
-	width: 32%;
+	width: 24%;
 	margin: 0;
 	border-width: 0;
 	margin-left: auto;
@@ -76,18 +116,44 @@ main background color: #16283f;
 }
 
 #accountProfileWindow {
+	width: 100%;
+	left: 0;
 	z-index: 3;
-	position: absolute;
-	width: 85%;
+	position: relative;
 	height: 60%;
 	padding: 20px;
-	border-radius: 2px;
 	box-shadow: 3px 3px 10px black;
-	background-color: #5782ba;
+	background-color: #D4E4F2;
+}
+
+#accountProfileWindow h1{
+	margin-top: 0px;
+	font-size: 17px;
+	font-weight: bolder;
 }
 
 #accountProfileWindow *{
-	background-color: #5782ba;
+	font-size: 15px;
+	background-color: #D4E4F2;
+}
+
+#accountProfileWindow button {
+	border: none;
+}
+
+.closeProfileWindow {
+	padding: 5px;
+	position: absolute;
+	right: 20px;
+	top: 15px;
+}
+
+.logOutOfAccount {
+	padding: 10px;
+	padding-left: 20px;
+	padding-right: 20px;
+	border-radius: 2px;
+ 	box-shadow:0 0 4px 1px #16283f inset;
 }
 
 .newEntryFieldset {
@@ -97,20 +163,58 @@ main background color: #16283f;
 
 .dreamEntryLegend {
 	width: 100%;
+	margin: 3px;
 }
 
-input[name='dreamContentInput'] {
+.dreamEntryForm input{
+	border: none;
+	padding: 5px;
+	margin: 3px;
+	margin-top: 7px;
+	background-color:  #12243a;
+}
+
+.dreamEntryForm input::placeholder{
+	color: #c5d5e2;
+	font-weight: lighter;
+}
+
+textarea[name='dreamContentInput'] {
+	padding: 15px;
 	width: 100%;
 	height: 300px;
 	border: none;
 	color: white;
+	font-weight: lighter;
 	background-color:  #12243a;
+}
+
+textarea[name='dreamContentInput']::placeholder {
+	color: #c5d5e2;;
+}
+
+.moreInfoButton1, .moreInfoButton2 {
+	border: none;
+}
+
+.moreInfoForm1{
+	margin-top: 5px;
+}
+
+.moreInfoForm2{
+	margin-top: 20px;
+}
+
+.moreInfoButton1 img, .moreInfoButton2 img{
+	margin-top: 10px;
+	height: 15px;
 }
 
 .newEntryFieldset input, .newEntryFieldset select{
 	width: 100%;
 	padding: 5px;
 	color: white;
+	border-radius: 2px;
 }
 
 .dreamEntry {
@@ -123,13 +227,19 @@ input[name='dreamContentInput'] {
 	background-color:  #12243a;
 }
 
+.dreamEntry select{
+	background-color:  #12243a;
+	margin: 10px;	
+}
+
 .symbolBox p {
 	width: 50%;
 	display: inline-block;
 }
 
-.next5 {
-	display: none;
+input[name='dreamTypeInput']{
+	width: 20px;
+	display: inline-block;
 }
 
 .moreInfoCSS {
@@ -150,4 +260,144 @@ input[name='dreamContentInput'] {
 	box-shadow: 3px 3px 10px black;
 }
 
+#dreamReport {
+	text-align: left;
+}
+
+.dreamSummary h1 {
+	font-size: 20px;
+	margin-top: 0px;
+}
+
+.extraSymbolInfo {
+	border: none;
+	color: white;
+	background-color:  #12243a;
+}
+
+.symbolBox {
+	padding: 3px;
+	margin: 5px;
+	width: 29%;
+	display: inline-block;
+	background-color:  #12243a;
+	clear:both;
+}
+
+.dreamSymbols {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	clear:both;
+}
+
+#calendar .fc-toolbar.fc-header-toolbar{
+	margin-bottom: 2px;
+}
+.fc-toolbar *{
+	font-size: 18px;
+}
+
+.fc-today-button {
+	display: none;
+}
+
+.fc .fc-button-group > *, .fc-icon {
+	height: 18px;
+	background-color:  #12243a;
+	font-size: 10px;
+	color: white;
+	margin-bottom: 5px;
+}
+
+#calendar .fc-button, .fc-state-default{
+	background-color:  #12243a;
+	background-image: none;
+}
+
+#calendar td.fc-today {
+	background: none;
+}
+
+#calendar .fc-day{
+	border: none;
+}
+
+.searchDreamForm {
+	text-align: left;
+}
+
+.searchDreamForm input, .searchDreamForm legend{
+	width: 100%;
+	border: none;
+	margin: 3px;
+}
+
+.searchDreamForm input {
+	margin-bottom: 5px;
+	font-size: 14px;
+	padding: 5px;
+	background-color:  #12243a;
+}
+
+.searchDreamForm input::placeholder {
+	color: #c5d5e2;
+	font-weight: lighter;
+}
+
+.searchDreamForm legend {
+	display:inline-block;
+	width: 80%;
+	float: left;
+}
+
+.dreamSearchButton {
+	border: none;
+	width: 15%;
+	display: inline-block;
+	color: #D4E4F2;
+}
+
+.dreamSearchButton img{
+	height: 25px;
+	position: absolute;
+	top: 25px;
+}
+
+.searchBar {
+	position: relative;
+	margin: 10px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+.dreamEntry {
+	position: relative;
+	text-align: left;
+	padding-top:0;
+	top: 60px;
+}
+
+.dreamEntry .dateHeader {
+	width: 100%;
+	position: absolute;
+	padding: 15px;
+	left:0;
+	margin: 0;
+	background-color: #c5d5e2;
+	color: #12243a;
+}
+
+.dreamlogEntryButtons {
+	position: absolute;
+	z-index: 3;
+	right: 5px;
+	top: 15px;
+	background-color: #c5d5e2;
+	color: #12243a;
+}
+
+.dreamlogEntryButtons button {
+	background-color: #c5d5e2;
+	color: #12243a;
+}
 

@@ -16,6 +16,18 @@ function makePrettyDate(data){
  	return `${date.toString().substring(0,3)} ${date.toLocaleDateString()}`;
 }
 
+function updateCalendar(symbol, dataArray){
+	let eventsArray = dataArray.map(object => {
+		return {
+			title: `${symbol}`,
+			start: `${object.submitDate.slice(0, 10)}`,
+			allDay: true,
+			textColor: 'white'
+		};
+	});
+	return eventsArray;
+}
+
 function displayAccountProfile(data){
 	console.log(data, 'in account profile function');
 	let newDate = makePrettyDate(data.accountCreated);
@@ -51,8 +63,8 @@ function createEditForm(objectInfo){
 
 				<h4>Dream Entry:</h4>
 				<legend class='dreamEntryLegend'>
-        		<input type='text' name='dreamContentInput' value='${objectInfo.content}' aria-label="dream-entry-content-input" required>
-        		</legend>
+        		<textarea type='text' name='dreamContentInput' value='${objectInfo.content}' aria-label="dream-entry-content-input" required>
+        		</textarea></legend>
         		</fieldset>
       			<button role="button" type="submit" class="editFormSubmitButton" hidden>Submit</button>
     		</form>`
@@ -88,29 +100,64 @@ function findMostCommonMood(mockDataWithSymbol){
 return finalArray;
 }
 
-function displaySymbolDetails(data, symbol, index){
-	//GET INFO FILTERED BY SYMBOL
-	let mockDataWithSymbol = [];
-	data.forEach(object=> {
-		object.keywords.forEach(item=>{
-			if(item === symbol){
-				mockDataWithSymbol.push(object);
+function findMostCommonEvents(data){
+	let allEvents = [];
+	let uniqueEvents = [];
+	let countedEvents = [];
+	data.forEach(object => {
+		object.lifeEvents.forEach(item => {
+			allEvents.push(item);
+		});
+	});
+	uniqueEvents = [...new Set(allEvents)];
+	uniqueEvents.forEach(item => {
+		countedEvents.push({lifeEvents: item, count: 0});
+	});
+	allEvents.forEach(item => {
+		countedEvents.forEach(object => {
+			if(item === object.lifeEvents){
+				object.count += 1;
 			}
 		});
 	});
-	let moodArray = findMostCommonMood(mockDataWithSymbol);
+
+	let finalArray = countedEvents.sort(highestCount).map(object => {
+		return object.lifeEvents;
+	})
+
+return finalArray;
+}
+
+function displaySymbolDetails(data, symbol, index){
+	let dataWithSymbol = [];
+	data.forEach(object=> {
+		object.keywords.forEach(item=>{
+			if(item === symbol){
+				dataWithSymbol.push(object);
+			}
+		});
+	});
+	let moodArray = findMostCommonMood(dataWithSymbol);
+	let lifeEventsArray = findMostCommonEvents(dataWithSymbol);
 	let moodArrayString = moodArray[0];
+	let eventsArrayString = lifeEventsArray[0];
 	if(moodArray.length > 0){
 		moodArrayString = moodArray.join(", ");
 	}
-	$('#dreamReport').find(`.dreamSymbols .symbolsMoreInfoBox${index}`).empty().addClass('moreInfoCSS').append(
+	if(lifeEventsArray.length > 0){
+		eventsArrayString = lifeEventsArray.join(", ");
+	}
+	$('.symbolsMoreInfoBox').empty().addClass('moreInfoCSS').append(
 		`<h4>Most likely dreamt of ${symbol} when feeling: ${moodArrayString}</h4>
-		<h4 class='dates'>Dates:</h4>`);
-	mockDataWithSymbol.forEach(object=> {
-		let date = makePrettyDate(object.submitDate);
-		$('#dreamReport').find(`.symbolsMoreInfoBox${index} .dates`).append(
-			`<p>${date}</p>`);	
-	});
+		<h4>Most likely dreamt of ${symbol} when dealing with: ${eventsArrayString}</h4>`
+	);
+	let eventsReference = updateCalendar(symbol, dataWithSymbol);
+	$('#calendar').fullCalendar('addEventSource', eventsReference);
+	$('html, body').animate({ 
+   		scrollTop: $(document).height()-$(window).height()}, 
+   		250, 
+   		"linear"
+	);
 }
 
 function highestCount(a, b){
@@ -145,7 +192,7 @@ return countedKeywords.sort(highestCount);
 
 function displayDreamReport(data){
 	$('#calendar').fullCalendar({
-  		events: [
+  		/*events: [
     		{
       		title: 'Event1',
       		start: '2018-05-05',
@@ -173,30 +220,22 @@ console.log($(this));
 	let keywords = findMostCommonKeywords(data);
 	let numKeywords = keywords.length;
 	$('#dreamReport').append(`<div class='dreamSummary'>
-		<h1>Number of dreams recorded:</h1>
-		<p>${data.length}</p>
-		<h1>Most common dream symbols:</h1>
-		</div>`);
+		<h1>Last 30 Days:</h1>
+		<p>Most common dream symbols:</p>
+		</div><div class='dreamSymbols'></div>`);
+			$('#dreamReport').append();
 	if(numKeywords > 5){
-		$('#dreamReport').append(`<div class='dreamSymbols'></div>
-			<button type='button' role='button' class='seeMoreKeywordsReport'>See More</button>`);
 		for(let i =0; i < 5; i++){
 			$('#dreamReport').find('.dreamSymbols').append(
-				`<div class='symbolBox'><p>${keywords[i].keyword}</p>
-				<button type='button' role='button' class='extraSymbolInfo'>See More</button></div><div class='symbolsMoreInfoBox${i}' hidden></div>`);
-		}
-		for(let i =5; i < numKeywords; i++){
-			$('#dreamReport').find('.dreamSymbols').append(
-				`<div class='symbolBox next5'><p>${keywords[i].keyword}</p>
-				<button type='button' role='button' class='extraSymbolInfo'>See More</button></div><div class='symbolsMoreInfoBox${i}' hidden></div>`);
+				`<div class='symbolBox'>
+				<button type='button' role='button' class='extraSymbolInfo ${i}'>${keywords[i].keyword}</button></div>`);
 		}
 	}
 	else {
-		$('#dreamReport').append(`<div class='dreamSymbols'></div>`);
 		for(let i =0; i < numKeywords; i++){
 			$('#dreamReport').find('.dreamSymbols').append(
-				`<div class='symbolBox'><p>${keywords[i].keyword}</p>
-				<button type='button' role='button' class='extraSymbolInfo'>See More</button></div><div class='symbolsMoreInfoBox${i}' hidden></div>`);
+				`<div class='symbolBox'>
+				<button type='button' role='button' class='extraSymbolInfo ${i}'>${keywords[i].keyword}</button></div>`);
 		}
 	}
 }
@@ -301,8 +340,8 @@ function setJWTHeader(xhr) {
     xhr.setRequestHeader('Content-Type', 'application/json');
 }
 
-function displayNewEntryPage(){
-	window.location.href = 'accounthomepage.html';
+function displayHomePage(){
+	window.location.href = 'dreamreport.html';
 }
 
 function updateJWT(object){
@@ -312,7 +351,7 @@ function updateJWT(object){
 		data: JSON.stringify(object), 
 		success: function(data){
 			localStorage.setItem('JWT_USER', data.authToken);
-			displayNewEntryPage();
+			displayHomePage();
 		},
 		error: function(err){
 			console.log(err);
@@ -339,16 +378,11 @@ function dreamReportPageListeners(){
 			beforeSend: setJWTHeader
 		});
 	}
-	$('#dreamReport').on('click', '.seeMoreKeywordsReport', function(){
-		$('#dreamReport').find('.seeMoreKeywordsReport').hide();
-		$('#dreamReport').find('.dreamSymbols .next5').removeClass('next5');
-	});
 	$('#dreamReport').on('click', '.symbolBox', function(){
-		//$('#dreamReport').find('.dreamSymbols .symbolsMoreInfoBox').not(this).hide();
-		$(this).next('div').toggle();
-		let index = $(this).next('div').attr('class').slice(-1);
-		console.log(index);
-		let targetSymbol = $(this).find('p').text();
+		$('.symbolsMoreInfoBox').show();
+		let index = $(this).find('button').attr('class').slice(-1);
+		let targetSymbol = $(this).find('button').text();
+		$('#calendar').fullCalendar('removeEvents');
 		displaySymbolDetails(dreams, targetSymbol, index);
 	});
 }
@@ -418,7 +452,7 @@ function dreamLogPageListeners(){
 	$('#editEntryWindow').on('click', '.editFormSubmitButton', event => {
 		event.preventDefault();
 		let id = $('#editEntryWindow').attr('value');
-		let newDream = $('#editEntryWindow').find('input[name="dreamContentInput"]').val();
+		let newDream = $('#editEntryWindow').find('textarea[name="dreamContentInput"]').val();
 		let objDate = $('#editEntryWindow').find('h3').text();
 		let keywords = [];
 		keywords.push($('#editEntryWindow').find('input[name="dreamKeywordsInput1"]').val());
@@ -484,22 +518,25 @@ function dreamLogPageListeners(){
 function newEntryPageListeners(){
 	$('.moreInfoButton1').on('click', event => {
 		event.preventDefault();
-		$('input[name="dreamContentInput"]').animate({height:'100px'});
+		$('textarea[name="dreamContentInput"]').animate({height:'100px'});
 		$('.moreInfoButton1').hide();
 		$('.moreInfoButton2').show();
 		$('.moreInfoForm1').toggle();
 	});
 	$('.moreInfoButton2').on('click', event => {
 		event.preventDefault();
-		$('input[name="dreamContentInput"]').animate({height:'30px'});
-		$('.moreInfoForm1 input').animate({height:'20px'});
 		$('.moreInfoButton2').hide();
 		$('.moreInfoForm2').toggle();
 		$('.submitButton').toggle();
+		$('html, body').animate({ 
+   			scrollTop: $(document).height()-$(window).height()}, 
+   			300, 
+   			"linear"
+		);
 	});
 	$('.dreamEntryForm').submit(event => {
 		event.preventDefault();
-		let newDream = $('input[name="dreamContentInput"]').val();
+		let newDream = $('textarea[name="dreamContentInput"]').val();
 		let keywords = [];
 		keywords.push($('input[name="dreamKeywordsInput1"]').val());
 		keywords.push($('input[name="dreamKeywordsInput2"]').val());
@@ -537,6 +574,10 @@ function newEntryPageListeners(){
 
 function navigationButtonListeners(){
 	$('.accountProfileNavButton').on('click', function(event){
+		if($('#accountProfileWindow').is(':visible')){
+			$('#accountProfileWindow').hide().empty();
+		}
+		else{
 		let current = window.location.href.split("/");
 		let refreshPath = current.pop();
 		$.ajax({
@@ -550,6 +591,7 @@ function navigationButtonListeners(){
 			dataType: 'json',
 			beforeSend: setJWTHeader
 		});
+		}
 	});
 	$('#accountProfileWindow').on('click', '.closeProfileWindow', event => {
 		event.preventDefault();
@@ -593,13 +635,33 @@ function homePageButtonListeners(){
 	newEntryPageListeners();
 	dreamLogPageListeners();
 	dreamReportPageListeners();
+	$('.loginLink').on('click', function(){
+		$('.createAccountButton').removeClass('selected');
+		$('.loginAccountButton').addClass('selected');
+		$('.signUpForm').hide();
+		$('.loginForm').toggle();
+		history.pushState({id: 'login'}, 'Account Login', '/login');
+		currentURL = window.location.href;
+	});
+	$('.signupLink').on('click', function(){
+		$('.loginAccountButton').removeClass('selected');
+		$('.createAccountButton').addClass('selected');
+		$('.loginForm').hide();
+		$('.signUpForm').toggle();
+		history.pushState({id: 'sign-up'}, 'Create Account', '/signup');
+		currentURL = window.location.href;
+	});
 	$('.createAccountButton').on('click', event => {
+		$('.loginAccountButton').removeClass('selected');
+		$('.createAccountButton').addClass('selected');
 		$('.loginForm').hide();
 		$('.signUpForm').toggle();
 		history.pushState({id: 'sign-up'}, 'Create Account', '/signup');
 		currentURL = window.location.href;
 	});
 	$('.loginAccountButton').on('click', event => {
+		$('.createAccountButton').removeClass('selected');
+		$('.loginAccountButton').addClass('selected');
 		$('.signUpForm').hide();
 		$('.loginForm').toggle();
 		history.pushState({id: 'login'}, 'Account Login', '/login');
