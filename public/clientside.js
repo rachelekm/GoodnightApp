@@ -28,6 +28,11 @@ function updateCalendar(symbol, dataArray){
 	return eventsArray;
 }
 
+function randomColorGenerator(){
+const colors = ["orange", "blue", "red", "green", "purple"];
+	return colors[Math.floor(Math.random() * colors.length)];
+}
+
 function displayAccountProfile(data){
 	console.log(data, 'in account profile function');
 	let newDate = makePrettyDate(data.accountCreated);
@@ -41,34 +46,76 @@ function displayAccountProfile(data){
 }
 
 function deleteEntryWarning(id){
-	$('#deleteEntryWarning').show().append(`Are you sure you want to delete this entry?
+	$('#deleteEntryWarning').show().append(`<span class='deleteText'>Are you sure you want to delete this entry?</span>
 		<button type='button' class='deleteEntryConfirm' value=${id}>YES</button>
 		<button type='button' class='dontDeleteButton'>NO</button>`);
 }
 
 function createEditForm(objectInfo){
-	let keywordsArray = objectInfo.keywords.split(', ');
-	$('#editEntryWindow').show().attr("value", objectInfo.id).html(`<div class='dreamlogEntryButtons'>
-			<button type="button" class='exitEditEntryButton'>Exit Edit</button>			
+	let date = makePrettyDate(objectInfo.submitDate);
+	/*console.log(objectInfo);
+	let keywordsArray = objectInfo.keywords;
+	let keywordPlaceholderArray; 
+	for(let i=0; i<keywordsArray.length; i++){
+		if(keywordsArray[i] === 'undefined'){
+			keywordPlaceholderArray.push(`${i+1}.`);
+		}
+		else{
+			keywordPlaceholderArray.push(keywordsArray[i]);
+		}
+	}*/
+	$('#editEntryWindow').show().attr("value", objectInfo._id).html(`<div class='dreamlogEditHeader'>
+			<h3>${date}</h3>
+			<button type="button" class='exitEditEntryButton'>Exit</button>			
 			</div>
 			<form class="editEntryForm">
-			    <h3>${objectInfo.date}</h3>
       			<fieldset class="editEntryFieldset">
-      			<h4>Keywords:</h4>
-				<input type='text' name='dreamKeywordsInput1' value='${keywordsArray[0]}' aria-label="dream-keyword-input" required>
-        		<input type='text' name='dreamKeywordsInput2' value='${keywordsArray[1]}' aria-label="dream-keyword-input">
-        		<input type='text' name='dreamKeywordsInput3' value='${keywordsArray[2]}' aria-label="dream-keyword-input">
-				<h4>Mood:</h4>
-        		<input type='text' name='dreamMoodInput' value='${objectInfo.mood}' aria-label="dream-keyword-input">
-
-				<h4>Dream Entry:</h4>
-				<legend class='dreamEntryLegend'>
-        		<textarea type='text' name='dreamContentInput' value='${objectInfo.content}' aria-label="dream-entry-content-input" required>
+      			<legend class='dreamEntryLegendEDIT'>
+        		<textarea type='text' name='dreamContentInput' aria-label="dream-entry-content-input" wrap='soft' required>${objectInfo.content}
         		</textarea></legend>
+      			<h4>Keywords:</h4>
+				<input type='text' name='dreamKeywordsInput1' value='${objectInfo.keywords[0]}' placeholder='${objectInfo.keywords[0]}' aria-label="dream-keyword-input" required>
+        		<input type='text' name='dreamKeywordsInput2' value='${objectInfo.keywords[1]}' placeholder='${objectInfo.keywords[1]}' aria-label="dream-keyword-input">
+        		<input type='text' name='dreamKeywordsInput3' value='${objectInfo.keywords[2]}' placeholder='${objectInfo.keywords[2]}' aria-label="dream-keyword-input">
+				<legend class='moreInfoForm1EDIT'>Was this a nightmare?
+            	<input type='radio' name='dreamTypeInput' value='yes' aria-label="dream-type-slection-option1"><label for='dreamTypeInput'>Yes</label>
+            	<input type='radio' name='dreamTypeInput' value='no' aria-label="dream-type-slection-option2"><label for='dreamTypeInput'>No</label>
+            	</legend>
+				<legend class='moreInfoForm2EDIT'>Select how you feel below:
+				<select name='userMoodInput' aria-label="user-mood-input" multiple size='3' required>
+      				<option value='happy'>Happy</option>
+      				<option value='calm'>Calm</option>
+      				<option value='lethargic'>Lethargic</option>
+      				<option value='emotional'>Emotional</option>
+      				<option value='anxious'>Anxious</option>
+      				<option value='irritated'>Irritated</option>
+      				<option value='depressed'>Depressed</option>
+      				<option value='excited'>Excited</option>
+      				<option value='nervous'>Nervous</option>
+      				<option value='apathetic'>Apathetic</option>
+      			</select></legend>
+            	<legend class='moreInfoForm2EDIT'>Select the life themes you're currently giving significant thought or worry:
+					<select name='userLifeEventsInput' aria-label="user-life-events-input" multiple size='3' required>
+              			<option value='Opportunities and Professional Development'>Opportunities and Professional Development</option>
+              			<option value='Sense of Purpose'>Sense of Purpose</option>
+              			<option value='Home and Domestic Development'>Home and Domestic Development</option>
+              			<option value='Family'>Family</option>
+              			<option value='Relationships'>Relationships</option>
+              			<option value='School or Work Expectations'>School or Work Expectations</option>
+              			<option value='Creative Pursuits'>Creative Pursuits</option>
+              			<option value='Security and Control'>Security and Control</option>
+              			<option value='Religion or Spirituality'>Religion or Spirituality</option>
+              			<option value='Health'>Health</option>
+              			<option value='Money'>Money</option>
+              			<option value='Aging'>Aging</option>
+              			<option value='Physical Appearance'>Physical Appearance</option>
+            		</select>
+            		</legend>
         		</fieldset>
-      			<button role="button" type="submit" class="editFormSubmitButton" hidden>Submit</button>
+      			<button role="button" type="submit" class="editFormSubmitButton">Submit</button>
     		</form>`
         	);
+
 }
 
 function findMostCommonMood(mockDataWithSymbol){
@@ -226,70 +273,80 @@ console.log($(this));
 			$('#dreamReport').append();
 	if(numKeywords > 5){
 		for(let i =0; i < 5; i++){
+			let color = randomColorGenerator();
 			$('#dreamReport').find('.dreamSymbols').append(
-				`<div class='symbolBox'>
-				<button type='button' role='button' class='extraSymbolInfo ${i}'>${keywords[i].keyword}</button></div>`);
+				`<div class='symbolBox ${color}'>
+				<button type='button' role='button' class='extraSymbolInfo ${color} ${i}'>${keywords[i].keyword}</button></div>`);
 		}
 	}
 	else {
 		for(let i =0; i < numKeywords; i++){
+			let color = randomColorGenerator();
 			$('#dreamReport').find('.dreamSymbols').append(
-				`<div class='symbolBox'>
-				<button type='button' role='button' class='extraSymbolInfo ${i}'>${keywords[i].keyword}</button></div>`);
+				`<div class='symbolBox ${color}'>
+				<button type='button' role='button' class='extraSymbolInfo ${color} ${i}'>${keywords[i].keyword}</button></div>`);
 		}
 	}
 }
 
 function displayDreamLogFILTER(data){
 	console.log(data, 'in display dream log filter function');
+	$('.searchDreamForm').find('.viewAllDreamEntries').remove();
+	$('.searchDreamForm').find('.searchTextBoxLog').remove();
 	$('#dreamLog').empty();
-	$('input[name="dreamSearchMoodInput"]').val('');
-	$('input[name="dreamSearchKeywordInput"]').val('');
-	if(data.length === 0){
+	let searchQuery = data.query;
+	$('input[name="dreamSearchInput"]').val('');
+	$('.searchDreamForm').append(`<button type='button' role='button' class='viewAllDreamEntries'>View All</button>`);
+	$('.searchDreamForm').append(`<div class='searchTextBoxLog'>Searched for: ${searchQuery}</button>`);
+	if(data.entries.length === 0){
 		$('#dreamLog').append(`<div class='dreamEntry'>No results for this search</div>`);
 	}
 	else{
-	data.forEach(object =>{
-		let keywordsString = object.keywords.join(", ");
+	data.entries.reverse().forEach(object =>{
+		let date = new Date(object.submitDate);
 		$('#dreamLog').append(`<div class='dreamEntry' value=${object._id}>
 		<div class='dreamlogEntryButtons'>
 			<button type="button" class='editEntryButton'>Edit</button>
 			<button type="button" class='deleteEntryButton'>Delete</button>
 		</div>
-		<h3 class='dateHeader'>${object.submitDate}</h3>
-		<h4 class='keywordsHeader'>Keywords:</h4>
-		<p>${keywordsString}</p>
-		<h4 class='moodHeader'>Mood:</h4>
-		<p>${object.mood}</p>
-		<h4 class='nightmareHeader'>Nightmare:</h4><p>${object.nightmare}</p>
-		<h4 class='contentHeader'>Dream Entry:</h4>
-		<p>${object.content}</p>
+		<h3 class='dateHeader'>${date.toString().substring(0,3)} ${date.toLocaleDateString()}</h3>
+		<p class='dreamEntryContent'>${object.content}</p>
+		<button type='button' role='button' class='seeMoreLogEntry${object._id}'><img class='seeMoreImage' src='https://i.imgur.com/lX9FEcH.png?1'/></button>
+		<div class='moreDreamEntryBox${object._id}' hidden><div class='keywordsSection'><h4>Keywords:</h4><div class='tags'></div></div>
+		<div class='moodSection'><h4>Mood:</h4><div class='tags'></div></div>
+		<div class='nightmareSection'><h4>Nightmare:</h4><p>${object.nightmare}</p></div>
+		<div class='lifeEventsSection'><h4>Themes of Importance or Worry at Time:</h4></div>
+		</div>
 		</div>`);
+		let color;
+		object.keywords.forEach(item => {
+			color = randomColorGenerator();
+			if(item.length > 0){
+			$('#dreamLog').find(`.moreDreamEntryBox${object._id} .keywordsSection div`)
+			.append(`<button type='button' role='button' class='tagButtons ${color}'>${item}</button>`);
+			}
+		});
+		object.mood.forEach(item => {
+			color = randomColorGenerator();
+			if(item.length > 0){
+			$('#dreamLog').find(`.moreDreamEntryBox${object._id} .moodSection div`)
+			.append(`<button type='button' role='button' class='tagButtons ${color}'>${item}</button>`);
+		}
+		});
+		object.lifeEvents.forEach(item => {
+			color = randomColorGenerator();
+			if(item.length > 0){
+			$('#dreamLog').find(`.moreDreamEntryBox${object._id} .lifeEventsSection`)
+			.append(`<button type='button' role='button' class='tagButtons ${color}'>${item}</button>`);
+		}
+		});
 	});
 	}
-	/*}
-	else if(type==='keyword'){
-		data.forEach(object =>{
-		let keywordsString = object.keywords.join(", ");
-		$('#dreamLog').append(`<div class='dreamEntry'>
-		<div class='dreamlogEntryButtons'>
-			<button type="button" class='editEntryButton'>Edit</button>
-			<button type="button" class='deleteEntryButton'>Delete</button>
-		</div>
-		<h3>${object.submitDate}</h3>
-		<h4>Keywords:</h4>
-		<p>${keywordsString}</p>
-		<h4>Mood: ${object.mood}</h4>
-		<h4>Dream Entry:</h4>
-		<p>${object.content}</p>
-		</div>`);
-		});
-	}*/
 }
 
 function displayDreamLog(data){
 	console.log(data, 'in display dream log function');
-	if(data.length === 0){
+	if(data.entries === 0){
 		$('#dreamLog').append(`<div class='dreamEntry'>No results for this search</div>`);
 	}
 	else{
@@ -302,16 +359,36 @@ function displayDreamLog(data){
 			<button type="button" class='deleteEntryButton'>Delete</button>
 		</div>
 		<h3 class='dateHeader'>${date.toString().substring(0,3)} ${date.toLocaleDateString()}</h3>
-		<h4 class='keywordsHeader'>Keywords:</h4>
-		<p>${keywordsString}</p>
-		<h4 class='moodHeader'>Mood:</h4>
-		<p>${object.mood}</p>
-		<h4 class='nightmareHeader'>Nightmare:</h4><p>${object.nightmare}</p>
-		<h4 class='lifeEventsHeader'>Themes of Importance or Worry at Time:</h4>
-		<p>${object.lifeEvents}</p>
-		<h4 class='contentHeader'>Dream Entry:</h4>
-		<p>${object.content}</p>
+		<p class='dreamEntryContent'>${object.content}</p>
+		<button type='button' role='button' class='seeMoreLogEntry${object._id}'><img class='seeMoreImage' src='https://i.imgur.com/lX9FEcH.png?1'/></button>
+		<div class='moreDreamEntryBox${object._id}' hidden><div class='keywordsSection'><h4>Keywords:</h4><div class='tags'></div></div>
+		<div class='moodSection'><h4>Mood:</h4><div class='tags'></div></div>
+		<div class='nightmareSection'><h4>Nightmare:</h4><p>${object.nightmare}</p></div>
+		<div class='lifeEventsSection'><h4>Themes of Importance or Worry at Time:</h4></div>
+		</div>
 		</div>`);
+		let color;
+		object.keywords.forEach(item => {
+			color = randomColorGenerator();
+			if(item.length > 0){
+			$('#dreamLog').find(`.moreDreamEntryBox${object._id} .keywordsSection div`)
+			.append(`<button type='button' role='button' class='tagButtons ${color}'>${item}</button>`);
+			}
+		});
+		object.mood.forEach(item => {
+			color = randomColorGenerator();
+			if(item.length === 'null'){
+			$('#dreamLog').find(`.moreDreamEntryBox${object._id} .moodSection div`)
+			.append(`<button type='button' role='button' class='tagButtons ${color}'>${item}</button>`);
+		}
+		});
+		object.lifeEvents.forEach(item => {
+			color = randomColorGenerator();
+			if(item.length > 0){
+			$('#dreamLog').find(`.moreDreamEntryBox${object._id} .lifeEventsSection`)
+			.append(`<button type='button' role='button' class='tagButtons ${color}'>${item}</button>`);
+		}
+		});
 	});
 	}
 }
@@ -406,17 +483,30 @@ function dreamReportPageListeners(){
 
 function dreamLogPageListeners(){
 	getDreamData();
-	/*$('.searchDreamKeywordsForm').submit(event => {
+	$('#dreamLog').on('click', '.dreamEntry', event => {
+		let selectedID = event.currentTarget.attributes[1].textContent;
+		console.log(selectedID);
+		$('#dreamLog').find(`.moreDreamEntryBox${selectedID}`).toggle('slow');
+		$('#dreamLog').find(`.seeMoreLogEntry${selectedID}`).toggle();
+	});
+	$('.searchDreamForm').submit(event => {
 		event.preventDefault();
 		$('#dreamLog').empty();
-		let keywordSearch = $('input[name="dreamSearchKeywordInput"]').val();
-		console.log(keywordSearch);
+		//let searchObj = {};
+		let search = $('input[name="dreamSearchInput"]').val();
+		/*if(moodSearch.length > 0 || moodSearch !== ''){
+			moodSearch = moodSearch.charAt(0).toUpperCase() + moodSearch.slice(1);
+			searchObj["searchMood"] = moodSearch;
+		}
+		if(keywordSearch !== '' || keywordSearch.length > 0){
+			searchObj["searchKey"] = keywordSearch;
+		}*/
 		$.ajax({
 			method: 'POST',
-			url: `${API_ENDPOINT}/dream-log`,
-			data: JSON.stringify({"searchKey": keywordSearch}), 
+			url: `${getEndpoint()}/dream-log`,
+			data: JSON.stringify({search: search}), 
 			success: function(data){
-				displayDreamLogFILTER(data, 'keyword');
+				displayDreamLogFILTER(data);
 			},
 			error: function(err){
 				console.log(err);
@@ -424,26 +514,14 @@ function dreamLogPageListeners(){
 			dataType: 'json',
 			beforeSend: setJWTHeader
 		});
-	});*/
-	$('.searchDreamForm').submit(event => {
-		event.preventDefault();
+	});
+	$('#dreamLog').on('click', '.tagButtons', event =>{
 		$('#dreamLog').empty();
-		let searchObj = {};
-		let moodSearch = $('input[name="dreamSearchMoodInput"]').val();
-		let keywordSearch = $('input[name="dreamSearchKeywordInput"]').val();
-		console.log(keywordSearch, moodSearch);
-		if(moodSearch.length > 0 || moodSearch !== ''){
-			moodSearch = moodSearch.charAt(0).toUpperCase() + moodSearch.slice(1);
-			searchObj["searchMood"] = moodSearch;
-		}
-		if(keywordSearch !== '' || keywordSearch.length > 0){
-			searchObj["searchKey"] = keywordSearch;
-		}
-		console.log(searchObj);
+		let search = $(event.currentTarget).text();
 		$.ajax({
 			method: 'POST',
 			url: `${getEndpoint()}/dream-log`,
-			data: JSON.stringify(searchObj), 
+			data: JSON.stringify({search: search}), 
 			success: function(data){
 				displayDreamLogFILTER(data);
 			},
@@ -457,39 +535,54 @@ function dreamLogPageListeners(){
 	$('#dreamLog').on('click', '.editEntryButton', event =>{
 		event.preventDefault();
 		let objId = findSelectedID($(event.currentTarget));
-		let textObject = {
+		$.ajax({
+			method: 'GET',
+			url: `${getEndpoint()}/${objId}`,
+			success: function(data){
+				createEditForm(data);
+			},
+			error: function(err){
+				console.log(err);
+			},
+			dataType: 'json',
+			beforeSend: setJWTHeader
+		});
+		/*let textObject = {
 			id: objId,
 			date: $(`div[value='${objId}']`).find('.dateHeader').text(),
 			keywords: $(`div[value='${objId}']`).find('.keywordsHeader').next().text(),
 			mood: $(`div[value='${objId}']`).find('.moodHeader').next().text(),
-			content: $(`div[value='${objId}']`).find('.contentHeader').next().text()
+			content: $(`div[value='${objId}']`).find('.dreamEntryContent').text()
 		}
-		createEditForm(textObject);
+		createEditForm(textObject);*/
 	});
 	$('#editEntryWindow').on('click', '.editFormSubmitButton', event => {
 		event.preventDefault();
 		let id = $('#editEntryWindow').attr('value');
-		let newDream = $('#editEntryWindow').find('textarea[name="dreamContentInput"]').val();
+		let newDream = $('#editEntryWindow').find('textarea').val();
 		let objDate = $('#editEntryWindow').find('h3').text();
 		let keywords = [];
 		keywords.push($('#editEntryWindow').find('input[name="dreamKeywordsInput1"]').val());
 		keywords.push($('#editEntryWindow').find('input[name="dreamKeywordsInput2"]').val());
 		keywords.push($('#editEntryWindow').find('input[name="dreamKeywordsInput3"]').val());
-		let userMood = $('#editEntryWindow').find('input[name="dreamMoodInput"]').val();
-		//must break out mood into array in case of mult selections
+		let userMood = $('#editEntryWindow').find('select[name="userMoodInput"]').val();
+		let nightmare = $('#editEntryWindow').find('input[type="radio"]:checked').val();
+		let userLifeThemes = $('#editEntryWindow').find('select[name="userLifeEventsInput"]').val();
 		let newObject = {
 			'id': id,
 			'submitDate': new Date(objDate),
 			'keywords': keywords,
-			'mood': [userMood], 
+			'mood': userMood,
+			'nightmare': nightmare,
+			'lifeEvents': userLifeThemes,
 			'content': newDream
 			};
+			console.log(newObject);
 		$.ajax({
 			method: 'PUT',
 			url: `${getEndpoint()}/${id}`,
 			data: JSON.stringify(newObject), 
 			success: function(){
-				console.log('made it to success');
 				$('#editEntryWindow').hide();
 				location.reload();
 			},
@@ -693,7 +786,6 @@ function homePageButtonListeners(){
 		currentURL = window.location.href;
 	});
 	$('.signUpForm').submit(event => {
-		console.log(currentPATH);
 		event.preventDefault();
 		user_USERNAME = $('input[aria-label="sign-up-form-username-input"]').val();
 		let password = $('input[aria-label="sign-up-form-password-input"]').val();

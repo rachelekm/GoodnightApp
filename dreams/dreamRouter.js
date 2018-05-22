@@ -42,6 +42,15 @@ router.get('/', jwtAuth, (req, res)=>{
     });
 });
 
+router.get('/:id', jsonParser, jwtAuth, (req, res)=>{
+  return dreamEntry.findById(req.params.id)
+  .then((entry) => res.json(entry.serialize()))
+  .catch(err => {
+    console.log(err);
+        res.status(500).json({ message: 'Internal server error' });
+  });
+});
+
 router.post('/', jsonParser, jwtAuth, (req, res) => {
 	const requiredFields = ['submitDate', 'keywords', 'mood', 'nightmare', 'lifeEvents', 'content'];
   const missingField = requiredFields.find(field => !(field in req.body));
@@ -127,7 +136,7 @@ router.delete('/:id', jsonParser, jwtAuth, (req, res) => {
 });
 
 router.post('/dream-log', jsonParser, jwtAuth, (req, res) => {
-  let searchObj = {};
+  /*let searchObj = {};
   Object.keys(req.body).forEach(key=>{
       if(key == 'searchKey'){
         searchObj["keywords"] = req.body.searchKey;
@@ -138,10 +147,17 @@ router.post('/dream-log', jsonParser, jwtAuth, (req, res) => {
      // else if(key == 'searchDate'){
      //   searchObj["submitDate"] = req.body.searchDate;
      // }
-    });
+    });*/
 //make one search object query with reg exp for exact substring match
-  return dreamEntry.find(searchObj).then(function(entries){
-    return res.status(200).json(entries);
+  let query = req.body.search.toString();
+  if(query.indexOf(',') != -1){
+        query = query.split(', ');
+  }
+  console.log(query);
+  if(typeof query == 'string'){
+
+  return dreamEntry.find({$or: [ { 'mood' : { $regex: query, $options: 'i' }}, { 'keywords' : { $regex: query, $options: 'i' }}, { 'content' : { $regex: query, $options: 'i' }}, { 'lifeEvents' : { $regex: query, $options: 'i' }}]}).then(function(entries){
+    return res.status(200).json({query: query, entries: entries});
   })
   .catch(err => {
     console.log(err);
@@ -149,8 +165,25 @@ router.post('/dream-log', jsonParser, jwtAuth, (req, res) => {
         return res.status(err.code).json(err);
       }
     return res.status(500).json({ message: 'Internal server error' });
-  });
-  //}
+    });
+  }
+
+  if(typeof query === 'object'){
+    let regex = [];
+    for (let i = 0; i < query.length; i++) {
+    regex[i] = new RegExp(query[i]);
+    }
+    return dreamEntry.find({$or: [ { 'mood' : { $in: regex }}, { 'keywords' : { $in: regex }}, { 'content' : { $in: regex }}, { 'lifeEvents' : { $in: regex }}]}).then(function(entries){
+      return res.status(200).json({query: query, entries: entries});
+    })
+    .catch(err => {
+      console.log(err);
+      if (err.reason === 'ValidationError') {
+        return res.status(err.code).json(err);
+      }
+      return res.status(500).json({ message: 'Internal server error' });
+    });
+  }
 /*  if(Object.keys(req.body) == 'searchMood'){
     return dreamEntry.find({"mood": req.body.searchMood}).then(function(entries){
       return res.status(200).json(entries);

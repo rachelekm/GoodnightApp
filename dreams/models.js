@@ -12,7 +12,7 @@ const dreamSchema = mongoose.Schema({
   },
   submitDate: {
     type: Date,
-    required: true
+    required: true,
   },
   //time you woke up, type: DAte
   keywords: [{

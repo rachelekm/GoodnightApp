@@ -12,10 +12,10 @@
 </head>
 <body>
 	<header role='header' class='navigationBar'>
-			<button type='button' class='accountProfileNavButton' value='Go_to_Account_Profile'><img src='https://i.imgur.com/NaPOcQ7.png'></button>
-			<a href='dreamlog.html'><button type='button' class='dreamLogNavButton' value='Go_to_Dream_Log'><img src='https://i.imgur.com/3rYNook.png'></button></a>
 			<a href='dreamreport.html'><button type='button' class='dreamReportNavButton' value='Go_to_Dream_Report'><img src='https://i.imgur.com/BC4IfeR.png'></button></a>
 			<a href='/newentry.html'><button type='button' class='newEntryNavButton' value='Go_to_New_Dream_Entry'><img src='https://i.imgur.com/LA8h4aR.png'></button></a>
+			<a href='dreamlog.html'><button type='button' class='dreamLogNavButton' value='Go_to_Dream_Log'><img src='https://i.imgur.com/3rYNook.png'></button></a>
+			<button type='button' class='accountProfileNavButton' value='Go_to_Account_Profile'><img src='https://i.imgur.com/NaPOcQ7.png'></button>
 	</header>
 	<section id='accountProfileWindow' hidden>
 	</section>
@@ -24,9 +24,8 @@
 			<form class="searchDreamForm">
 				<div class=searchBar>
         		<legend>
-        		<input type='text' name='dreamSearchKeywordInput' placeholder='Search by dream keywords' aria-label="dream-keyword-search-input">
-        		<input type='text' name='dreamSearchMoodInput' placeholder='Search by mood' aria-label="mood-search-input"></legend>
-        		<button role="button" type="submit" class="dreamSearchButton"><img src='https://i.imgur.com/ZrgKJGB.png'/></button>
+        		<input type='text' name='dreamSearchInput' placeholder='Search keywords, mood, content' aria-label="dream--search-input">
+        		<button role="button" type="submit" class="dreamSearchButton"><img src='https://i.imgur.com/EFnPWug.png'/></button>
         	</div>
         	</form>
 			<div id='dreamLog'>
