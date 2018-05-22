@@ -38,7 +38,7 @@ router.post('/', jsonParser, (req, res) => {
     	});
   	}
 
-  	const trimmedFields = ['username', 'password', 'firstName', 'lastName'];
+  	const trimmedFields = ['username', 'password'];
   	const nonTrimmedField = trimmedFields.find(
     	field => req.body[field].trim() !== req.body[field]
   	);
@@ -86,6 +86,8 @@ router.post('/', jsonParser, (req, res) => {
   	}
 
   let {username, password, firstName, lastName} = req.body;
+  firstName = firstName.trim();
+  lastName = lastName.trim();
 
   return User.find({username})
     .count()
@@ -132,6 +134,13 @@ router.get('/', jwtAuth, (req, res) => {
     console.log(err);
         res.status(500).json({ message: 'Internal server error' });
   });
+});
+
+//used in test integrations
+router.get('/users', (req, res) => {
+  return User.find()
+    .then(users => res.json(users.map(user => user.serialize())))
+    .catch(err => res.status(500).json({message: 'Internal server error'}));
 });
 
 module.exports = {router};

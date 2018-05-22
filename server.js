@@ -8,7 +8,7 @@ const passport = require('passport');
 
 mongoose.Promise = global.Promise;
 
-const { PORT, DATABASE_URL } = require('./config');
+const { PORT, DATABASE_URL, TEST_DATABASE_URL } = require('./config');
 
 const app = express();
 
@@ -21,6 +21,10 @@ app.use(morgan('common'));
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/views/index.html');
+});
+
+app.get('/signup', (req, res) => {
   res.sendFile(__dirname + '/views/index.html');
 });
 
@@ -80,5 +84,5 @@ if (require.main === module) {
   runServer(DATABASE_URL).catch(err => console.error(err));
 }
 
-module.exports = { app, runServer, closeServer };
+module.exports = { app, runServer, closeServer, TEST_DATABASE_URL };
  
