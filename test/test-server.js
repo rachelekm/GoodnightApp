@@ -21,6 +21,7 @@ const AuthToken = function(user) {
 };
 
 describe('Dream Journal', function() {
+
   before(function() {
     return runServer(TEST_DATABASE_URL);
   });
@@ -60,6 +61,7 @@ describe('Dream Journal', function() {
           "submitDate": "2018-05-20T20:55:06.000Z", 
           "nightmare": "no", 
           "content": "new dream entry test"};
+                console.log(res.body);
 
         return chai.request(app)
           .post('/dreams')
@@ -68,6 +70,7 @@ describe('Dream Journal', function() {
           .send(newItem);
       })
       .then(function(res) {
+                console.log(res.body);
         const expectedKeys = ['submitDate', 'keywords', 'mood', 'nightmare', 'lifeEvents', 'content'];
         expect(res).to.have.status(201);
         expect(res).to.be.json;
