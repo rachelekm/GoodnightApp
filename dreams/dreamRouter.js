@@ -45,7 +45,6 @@ router.get('/', jwtAuth, (req, res)=>{
 router.post('/', jsonParser, jwtAuth, (req, res) => {
 	const requiredFields = ['submitDate', 'keywords', 'mood', 'nightmare', 'lifeEvents', 'content'];
   const missingField = requiredFields.find(field => !(field in req.body));
-
   if (missingField) {
     	return res.status(422).json({
       	code: 422,
@@ -54,11 +53,18 @@ router.post('/', jsonParser, jwtAuth, (req, res) => {
       	location: missingField
     	});
   }
+  let newUser;
   //trim whitespace from keyword input strings
+ // if(req.user.id){
+    newUser = req.user.id;
+ // }
+ /* else{
+    newUser = req.user[0].id;
 
+  }*/
   return dreamEntry.create({
 
-    user: req.user.id,
+    user: newUser,
     submitDate: req.body.submitDate,
     keywords: req.body.keywords,
     mood: req.body.mood,
@@ -69,12 +75,12 @@ router.post('/', jsonParser, jwtAuth, (req, res) => {
   }).then(dream => {
     return res.status(201).json(dream.serialize());
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       if (err.reason === 'ValidationError') {
         return res.status(err.code).json(err);
       }
-      res.status(500).json({code: 500, message: 'Internal server error'});
+      res.status(500).json({code: 500, message: `Internal server error, ${err}`});
     });
 });
 
@@ -104,7 +110,7 @@ router.put('/:id', jsonParser, jwtAuth, (req, res) => {
     res.status(204).end()})
   .catch(err => {
     console.log(err);
-    res.status(500).json({message: 'Internal server error'})
+    res.status(500).json({message: `Internal server error, ${err}`})
   });
 });
 
@@ -133,7 +139,7 @@ router.post('/dream-log', jsonParser, jwtAuth, (req, res) => {
      //   searchObj["submitDate"] = req.body.searchDate;
      // }
     });
-//make one object
+//make one search object query with reg exp for exact substring match
   return dreamEntry.find(searchObj).then(function(entries){
     return res.status(200).json(entries);
   })

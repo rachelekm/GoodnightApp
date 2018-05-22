@@ -344,10 +344,27 @@ function displayHomePage(){
 	window.location.href = 'dreamreport.html';
 }
 
+function refreshJWT(){
+	$.ajax({
+		method: 'POST',
+		url: `/login/refresh`,
+		success: function(data){
+			localStorage.setItem('JWT_USER', data.authToken);
+			displayHomePage();
+		},
+		error: function(err){
+			console.log(err);
+		},
+		dataType: 'json',
+		contentType: 'application/json',
+		beforeSend: setJWTHeader
+	});
+}
+
 function updateJWT(object){
 	$.ajax({
 		method: 'POST',
-		url: `${currentPATH}login`,
+		url: '/login',
 		data: JSON.stringify(object), 
 		success: function(data){
 			localStorage.setItem('JWT_USER', data.authToken);
@@ -559,6 +576,7 @@ function newEntryPageListeners(){
 			url: getEndpoint(),
 			data: JSON.stringify(newObject), 
 			success: function(data){
+				refreshJWT();
 				history.pushState(null, null, '/dreamlog.html');
 				currentURL = window.location.href;
 				location.reload();
@@ -631,6 +649,13 @@ function navigationButtonListeners(){
 }
 
 function homePageButtonListeners(){
+	console.log(currentPATH);
+	if(currentPATH == '/signup'){
+		$('.loginAccountButton').removeClass('selected');
+		$('.createAccountButton').addClass('selected');
+		$('.loginForm').hide();
+		$('.signUpForm').show();
+	}
 	navigationButtonListeners();
 	newEntryPageListeners();
 	dreamLogPageListeners();
@@ -639,7 +664,7 @@ function homePageButtonListeners(){
 		$('.createAccountButton').removeClass('selected');
 		$('.loginAccountButton').addClass('selected');
 		$('.signUpForm').hide();
-		$('.loginForm').toggle();
+		$('.loginForm').show();
 		history.pushState({id: 'login'}, 'Account Login', '/login');
 		currentURL = window.location.href;
 	});
@@ -647,7 +672,7 @@ function homePageButtonListeners(){
 		$('.loginAccountButton').removeClass('selected');
 		$('.createAccountButton').addClass('selected');
 		$('.loginForm').hide();
-		$('.signUpForm').toggle();
+		$('.signUpForm').show();
 		history.pushState({id: 'sign-up'}, 'Create Account', '/signup');
 		currentURL = window.location.href;
 	});
@@ -655,7 +680,7 @@ function homePageButtonListeners(){
 		$('.loginAccountButton').removeClass('selected');
 		$('.createAccountButton').addClass('selected');
 		$('.loginForm').hide();
-		$('.signUpForm').toggle();
+		$('.signUpForm').show();
 		history.pushState({id: 'sign-up'}, 'Create Account', '/signup');
 		currentURL = window.location.href;
 	});
@@ -663,11 +688,12 @@ function homePageButtonListeners(){
 		$('.createAccountButton').removeClass('selected');
 		$('.loginAccountButton').addClass('selected');
 		$('.signUpForm').hide();
-		$('.loginForm').toggle();
+		$('.loginForm').show();
 		history.pushState({id: 'login'}, 'Account Login', '/login');
 		currentURL = window.location.href;
 	});
 	$('.signUpForm').submit(event => {
+		console.log(currentPATH);
 		event.preventDefault();
 		user_USERNAME = $('input[aria-label="sign-up-form-username-input"]').val();
 		let password = $('input[aria-label="sign-up-form-password-input"]').val();
@@ -675,7 +701,7 @@ function homePageButtonListeners(){
 		let last_Name = $('input[aria-label="sign-up-form-last-name-input"]').val().toString();
 		$.ajax({
 			method: 'POST',
-			url: `${currentPATH}account`,
+			url: `/account`,
 			data: JSON.stringify({username: user_USERNAME, password: password, firstName: first_Name, lastName: last_Name}), 
 			success: function(data){
 				updateJWT({username: user_USERNAME, password: password});

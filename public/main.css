@@ -1,15 +1,19 @@
 /*
-main background color: #16283f;
+old main background color: #16283f;
+new main background color: #FAF8F3;
+light blue background: #c5d5e2;
+nav icon blue: #172668;
+text-color: #243647;
 */
 
 * {
   box-sizing: border-box;
-  background-color: #16283f;
+  background-color: #FAF8F3;
   font-family: 'Gothic A1', sans-serif;
 }
 
 #main {
-	color: white;
+	color: #243647;
 	padding: 20px;
 }
 
@@ -20,16 +24,19 @@ main background color: #16283f;
 .createAccountButton, .loginAccountButton {
 	position: relative;
 	display: inline-block;
+	padding-top: 10px;
+	padding-bottom: 10px;
 	width: 50%;
 	margin-top: 10px;
 	float: left;
 	border: none;
-	color: white;
+	color: #243647;
 }
 
 .selected {
-	background-color: #c5d5e2;
-	color: #12243a;
+	background-color: white;
+	color: #243647;
+	border-bottom: 1px solid #c5d5e2;
 }
 
 #pageContents {
@@ -40,7 +47,8 @@ main background color: #16283f;
 	position: relative;
 	float: left;
 	text-align: center;
-	background-color: #12243a;
+	border-radius: 2px;
+	background-color: #c5d5e2;
 	width: 100%;
 	margin-top: 10px;
 	padding: 20px;
@@ -50,8 +58,8 @@ main background color: #16283f;
 .signupLink, .loginLink {
 	font-size: 13px;
 	border: none;
-	background-color: #12243a;
-	color: #D4E4F2;
+	background-color: #c5d5e2;
+	color: #243647;
 }
 
 #homepage .submitButton {
@@ -64,14 +72,14 @@ main background color: #16283f;
 }
 
 .loginForm fieldset, .signUpForm fieldset, .loginForm input, .signUpForm input, .loginForm legend, .signUpForm legend{
-	background-color: #12243a;
+	background-color: #c5d5e2;
 	border: none;
-	color: white;
+	color: #243647;
 	width: 100%;
 }
 
 .loginForm input::placeholder, .signUpForm input::placeholder{
-	color: #c5d5e2;
+	color: grey;
 }
 
 .loginForm fieldset, .signUpForm fieldset {
@@ -89,20 +97,23 @@ main background color: #16283f;
 }
 
 .loginForm .submitButton, .signUpForm .submitButton, .dreamEntryForm .submitButton {
-	background-color: #12243a;
+	background-color: #c5d5e2;
 	padding: 10px;
 	border-radius: 4px;
 	border: 1px solid #D4E4F2;
-	color: #D4E4F2;
+	color: #243647;
 }
 
 .navigationBar {
 	width: 100%;
-	background-color: #182f4c;
+	background-color: #c5d5e2;
 	padding: 10px;
-	-webkit-box-shadow: 0 3px 5px -3px white;
-	-moz-box-shadow: 0 3px 5px -3px #000;
 	box-shadow: 0 3px 5px -3px #000;
+}
+
+.navigationBar img {
+	height: 15px;
+	background-color: #c5d5e2;
 }
 
 .navigationBar button {
@@ -111,8 +122,8 @@ main background color: #16283f;
 	border-width: 0;
 	margin-left: auto;
 	margin-right: auto;
-	background-color: #182f4c;
-	color: #D4E4F2;
+	background-color: #c5d5e2;
+	color: #243647;
 }
 
 #accountProfileWindow {
@@ -122,7 +133,7 @@ main background color: #16283f;
 	position: relative;
 	height: 60%;
 	padding: 20px;
-	box-shadow: 3px 3px 10px black;
+	box-shadow: 0px 3px 10px silver;
 	background-color: #D4E4F2;
 }
 
@@ -175,7 +186,7 @@ main background color: #16283f;
 }
 
 .dreamEntryForm input::placeholder{
-	color: #c5d5e2;
+	color: #243647;
 	font-weight: lighter;
 }
 
@@ -184,13 +195,14 @@ textarea[name='dreamContentInput'] {
 	width: 100%;
 	height: 300px;
 	border: none;
-	color: white;
+	border-radius: 5px;
+	color: #243647;
 	font-weight: lighter;
-	background-color:  #12243a;
+	background-color:  white;
 }
 
 textarea[name='dreamContentInput']::placeholder {
-	color: #c5d5e2;;
+	color: #243647;
 }
 
 .moreInfoButton1, .moreInfoButton2 {
@@ -207,28 +219,38 @@ textarea[name='dreamContentInput']::placeholder {
 
 .moreInfoButton1 img, .moreInfoButton2 img{
 	margin-top: 10px;
-	height: 15px;
+	height: 45px;
 }
 
 .newEntryFieldset input, .newEntryFieldset select{
 	width: 100%;
 	padding: 5px;
-	color: white;
+	color: #243647;
+	border: none;
+	background-color:  white;
 	border-radius: 2px;
+}
+
+.newEntryFieldset select{
+	margin-top: 10px;
+}
+
+.newEntryFieldset select option{
+	background-color: white;
 }
 
 .dreamEntry {
 	padding: 10px;
-	background-color:  #12243a;
+	background-color: white;
 	margin: 10px;
 }
 
 .dreamEntry *{
-	background-color:  #12243a;
+	background-color: white;
 }
 
 .dreamEntry select{
-	background-color:  #12243a;
+	background-color: white;
 	margin: 10px;	
 }
 
@@ -239,6 +261,7 @@ textarea[name='dreamContentInput']::placeholder {
 
 input[name='dreamTypeInput']{
 	width: 20px;
+	background-color: white;
 	display: inline-block;
 }
 
@@ -280,7 +303,7 @@ input[name='dreamTypeInput']{
 	margin: 5px;
 	width: 29%;
 	display: inline-block;
-	background-color:  #12243a;
+	background-color: white;
 	clear:both;
 }
 
