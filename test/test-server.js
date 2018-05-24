@@ -67,14 +67,11 @@ describe('Dream Journal', function() {
     return chai.request(app)
       .get('/account/users')
       .then(function(res){
-        console.log(res.body);
-        console.log(AuthToken(res.body));
         return chai.request(app)
           .get('/dreams')
           .set('Authorization', `Bearer ${AuthToken(res.body)}`);
       })
       .then(function(res) {
-        console.log(res.body);
         expect(res).to.have.status(200);
             expect(res).to.be.json;
             expect(res.body).to.be.a('array');
@@ -84,6 +81,34 @@ describe('Dream Journal', function() {
               expect(item).to.include.keys(expectedKeys);
             });
           });
+  });
+
+  it('should get dream by ID on GET', function() {
+    let token;
+    return chai.request(app)
+      .get('/account/users')
+      .then(function(res){
+        token = AuthToken(res.body[0]);
+        return chai.request(app)
+          .get('/dreams')
+          .set('Authorization', `Bearer ${token}`);
+      })
+      .then(function(res) {
+        let id = res.body[0]._id;
+        
+        return chai.request(app)
+        .get(`/dreams/${id}`)
+        .set('Authorization', `Bearer ${token}`);
+      })
+      .then(function(res) {
+        console.log(res);
+        console.log(res.body);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.be.a('object');
+        const expectedKeys = ['user', 'submitDate', 'keywords', 'mood', 'nightmare', 'lifeEvents', 'content'];
+        expect(res.body).to.include.keys(expectedKeys);
+      });
   });
 
   it('should add an a new dream entry on POST', function() {
@@ -97,7 +122,6 @@ describe('Dream Journal', function() {
           "submitDate": "2018-05-20T20:55:06.000Z", 
           "nightmare": "no", 
           "content": "new dream entry test"};
-          console.log(res.body);
         return chai.request(app)
           .post('/dreams')
           .set('Authorization', `Bearer ${AuthToken(res.body[0])}`)
@@ -105,7 +129,6 @@ describe('Dream Journal', function() {
           .send(newItem);
       })
       .then(function(res) {
-        console.log(res.body);
         const expectedKeys = ['submitDate', 'keywords', 'mood', 'nightmare', 'lifeEvents', 'content'];
         expect(res).to.have.status(201);
         expect(res).to.be.json;
@@ -122,15 +145,11 @@ describe('Dream Journal', function() {
       .get('/account/users')
       .then(function(res){
         user = res.body[0];
-                  console.log(res.body);
-
         return chai.request(app)
           .get('/dreams')
           .set('Authorization', `Bearer ${AuthToken(user)}`);
       })
       .then(function(res) {
-                  console.log(res.body);
-
         const entryID = res.body[0]._id;
         updatedData = {"id": `${entryID}`,
           "keywords": [ "updatedKeyword", "fish", "dog" ],
