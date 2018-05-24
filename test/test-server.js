@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const config = require('../config');
 const { app, runServer, closeServer } = require('../server');
 const { User } = require('../users');
+const { dreamEntry } = require('../dreams');
 const { JWT_SECRET, TEST_DATABASE_URL } = require('../config');
 
 const expect = chai.expect;
@@ -21,6 +22,11 @@ const AuthToken = function(user) {
   });
 };
 
+const username = 'demousername';
+const password = 'demopassword';
+const firstName = 'demoFirstName';
+const lastName = 'demoLastName';
+
 describe('Dream Journal', function() {
 
   before(function() {
@@ -29,6 +35,32 @@ describe('Dream Journal', function() {
 
   after(function() {
     return closeServer();
+  });
+
+  beforeEach(function () {
+    return User.hashPassword(password).then(password =>
+      User.create({
+        username,
+        password,
+        firstName,
+        lastName
+      })
+    ).
+    then(user => 
+      dreamEntry.create({
+        user: user,
+        submitDate: new Date(),
+        keywords: [ "cats", "", "" ], 
+        mood: [ "lethargic" ], 
+        nightmare: "no", 
+        lifeEvents: [ "Sense of Purpose" ], 
+        content: "Lorem Ipsum TKTKTKTK"
+        })
+      );
+  });
+
+  afterEach(function () {
+    return User.find({username: username}).remove();
   });
 
   it('should get dreams on GET', function() {
