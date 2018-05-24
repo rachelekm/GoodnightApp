@@ -26,6 +26,11 @@ function updateCalendar(symbol, dataArray){
 	return eventsArray;
 }
 
+function shuffle(a, b)
+{
+   return Math.random() > 0.5 ? -1 : 1;
+}
+
 function randomColorGenerator(){
 const colors = ["orange", "blue", "red", "green", "purple"];
 	return colors[Math.floor(Math.random() * colors.length)];
@@ -311,15 +316,17 @@ console.log($(this));
 	else{
 	let keywords = findMostCommonKeywords(data);
 	let numKeywords = keywords.length;
+	let colors = ["orange", "blue", "red", "green", "purple"];
 	$('#dreamReport').append(`<div class='dreamSummary'>
 		<h1>Last 30 Days:</h1>
 		<p>Most common dream symbols:</p>
 		</div><div class='dreamSymbols'></div>`);
 			$('#dreamReport').append();
+	colors = colors.sort(shuffle);
 	if(numKeywords > 5){
 		for(let i =0; i < 5; i++){
 			if(keywords[i].keyword !== ''){
-			let color = randomColorGenerator();
+			let color = colors[i];
 			$('#dreamReport').find('.dreamSymbols').append(
 				`<div class='symbolBox ${color}'>
 				<button type='button' role='button' class='extraSymbolInfo ${color} ${i}'>${keywords[i].keyword}</button></div>`);
@@ -329,7 +336,7 @@ console.log($(this));
 	else {
 		for(let i =0; i < numKeywords; i++){
 			if(keywords[i].keyword !== ''){
-			let color = randomColorGenerator();
+			let color = colors[i];
 			$('#dreamReport').find('.dreamSymbols').append(
 				`<div class='symbolBox ${color}'>
 				<button type='button' role='button' class='extraSymbolInfo ${color} ${i}'>${keywords[i].keyword}</button></div>`);
