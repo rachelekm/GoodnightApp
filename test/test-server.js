@@ -35,11 +35,13 @@ describe('Dream Journal', function() {
       .get('/account/users')
       .then(function(res){
         console.log(res.body);
+        console.log(AuthToken(res.body));
         return chai.request(app)
           .get('/dreams')
           .set('Authorization', `Bearer ${AuthToken(res.body)}`);
       })
       .then(function(res) {
+        console.log(res.body);
         expect(res).to.have.status(200);
             expect(res).to.be.json;
             expect(res.body).to.be.a('array');
