@@ -38,6 +38,24 @@ router.post('/', jsonParser, (req, res) => {
     	});
   	}
 
+    let nonLettersField = [];
+    const nonLetters = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "~", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")"]
+    if(nonLetters.some(item => req.body.firstName.includes(item))){
+      nonLettersField.push('firstName');
+    }
+    if(nonLetters.some(item => req.body.lastName.includes(item))){
+      nonLettersField.push('lastName');
+    }
+
+    if (nonLettersField.length > 0) {
+      return res.status(422).json({
+        code: 422,
+        reason: 'ValidationError',
+        message: 'Cannot include numbers of special characters',
+        location: nonLettersField
+      });
+    }
+
   	const trimmedFields = ['username', 'password'];
   	const nonTrimmedField = trimmedFields.find(
     	field => req.body[field].trim() !== req.body[field]

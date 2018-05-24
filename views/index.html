@@ -3,7 +3,7 @@
 <head>
 	<meta charset='utf-8'>
 	<meta name='viewport' content='width=device-width'>
-	<title>Dream Journal App</title>
+	<title>Goodnight App</title>
 	<meta name='description' content='dream tracking and reporting app'>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.css">
 	<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
@@ -12,10 +12,29 @@
 </head>
 <body>
 	<section role='main' id='main'>
-		<section id='homepage'>
-		<h1>DREAM JOURNAL</h1>
-		<button type="button" class='createAccountButton'>Create Account</button>
-		<button type="button" class='loginAccountButton selected'>Log in</button>
+    <section id='landingPage'>
+      <div class='intro'>
+        <button type="button" class='getStartedLoginButton'>Login</button>
+        <h1>GOODNIGHT</h1>
+        <h2>Improve your waking life with a better dream journal</h2>
+        <button type="button" class='getStartedButton'>Get Started</button>
+        <button type="button" class='demoAccountLoginButton'>Try The Demo</button>
+      </div>
+      <div class='landingPageDescription'>
+        <img src='https://i.imgur.com/LA8h4aR.png'><h2>Record</h2>
+        <p>Every morning, login to record your dream right when you wake up. Reflect on your mood, if any symbols resonated with you, and what's happening in your life that day.</p>
+        <img src='https://i.imgur.com/3rYNook.png'><h2>Report</h2>
+        <p>Your daily dream journal entries are stored in your private dream bank; open to search by mood, symbols, and different life events that might be on your mind.</p>
+        <img src='https://i.imgur.com/fGunDMM.png?1'><h2>Grow</h2>
+        <p>View what symbols have appeared most in your dreams in the last 30 days. Use your Goodnight Calendar to view how your dream symbols relate to life events, nightmare frequency, and better understand how your thoughts and feelings are affecting your sleep.</p>
+      </div>
+    </section>
+		<section id='homepage' hidden>
+      <div class='homepageHeader'>
+		    <a href='/'><h1>GOODNIGHT</h1></a>
+      </div>
+		  <button type="button" class='createAccountButton'>Create Account</button>
+		  <button type="button" class='loginAccountButton selected'>Log in</button>
 		<section class='signUpFormSection'>
 			<form class="signUpForm" hidden>
       			<fieldset class="signUpFieldset">
@@ -29,11 +48,11 @@
         		<input type='text' name='lastNameInput' placeholder='last name' aria-label="sign-up-form-last-name-input" required></legend>
       			</fieldset>
       			<button role="button" type="submit" class="submitButton">Create Journal</button>
-      			<button role="button" type="submit" class="loginLink">Have an account? Log in here.</button>
+            <button role="button" type="submit" class="loginLink">Have an account? Log in here.</button>
     		</form>
 		</section>
 		<section class='loginFormSection'>
-			<form class="loginForm">
+			<form class="loginForm" hidden>
       			<fieldset class="loginFieldset">
         		<legend>
         		<input type='text' name='usernameInput' placeholder='Username' aria-label="login-form-username-input" required></legend>

@@ -38,8 +38,23 @@ function incorrectLoginWindow(){
 }
 
 function signUpErrorWindow(err){
-	$('.signUpFieldset').find(`input[placeholder="${err.location}"]`).addClass('locationSelection');
-	$('.signUpFieldset').append(`<div class='warningBoxIncorrectLogin'>${err.message}</div>`)
+	let newLocation;
+	if(typeof err.location === 'object'){
+		let message = err.message;
+		err.location.forEach(err => {
+			if(err === 'firstName'){ newLocation = 'first name'};
+			if(err === 'lastName'){ newLocation = 'last name'};
+			console.log(newLocation);
+			$('.signUpFieldset').find(`input[placeholder="${newLocation}"]`).addClass('locationSelection');
+		});
+		$('.signUpFieldset').append(`<div class='warningBoxIncorrectLogin'>${message}</div>`);
+	}
+	else {
+		if(err.location === 'firstName'){ newLocation = 'first name'};
+		if(err.location === 'lastName'){ newLocation = 'last name'};
+		$('.signUpFieldset').find(`input[placeholder="${newLocation}"]`).addClass('locationSelection');
+		$('.signUpFieldset').append(`<div class='warningBoxIncorrectLogin'>${err.message}</div>`);
+	}
 }
 
 function displayAccountProfile(data){
@@ -767,17 +782,12 @@ function navigationButtonListeners(){
 }
 
 function homePageButtonListeners(){
-	console.log(currentPATH);
 	if(currentPATH == '/signup'){
 		$('.loginAccountButton').removeClass('selected');
 		$('.createAccountButton').addClass('selected');
 		$('.loginForm').hide();
 		$('.signUpForm').show();
 	}
-	navigationButtonListeners();
-	newEntryPageListeners();
-	dreamLogPageListeners();
-	dreamReportPageListeners();
 	$('.loginLink').on('click', function(){
 		$('.createAccountButton').removeClass('selected');
 		$('.loginAccountButton').addClass('selected');
@@ -839,10 +849,43 @@ function homePageButtonListeners(){
 
 	$('.loginForm').submit(event => {
 		event.preventDefault();
+		$('.loginFieldset').find('.warningBoxIncorrectLogin').remove();
 		user_USERNAME = $('input[aria-label="login-form-username-input"]').val();
 		let password = $('input[aria-label="login-form-password-input"]').val();
 		updateJWT({username: user_USERNAME, password: password});
 	});
 }
 
-$(homePageButtonListeners);
+function landingPageListeners(){
+	homePageButtonListeners();
+	navigationButtonListeners();
+	newEntryPageListeners();
+	dreamLogPageListeners();
+	dreamReportPageListeners();
+	$('.getStartedButton').on('click', event => {
+		$('#homepage').show();
+		$('#landingPage').hide();
+		$('.loginAccountButton').removeClass('selected');
+		$('.createAccountButton').addClass('selected');
+		$('.signUpForm').show();
+		$('.loginForm').hide();
+		history.pushState({id: 'sign-up'}, 'Create Account', '/signup');
+	});
+	$('.getStartedLoginButton').on('click', event => {
+		$('#homepage').show();
+		$('#landingPage').hide();
+		$('.createAccountButton').removeClass('selected');
+		$('.loginAccountButton').addClass('selected');
+		$('.loginForm').show();
+		$('.signUpForm').hide();
+		history.pushState({id: 'login'}, 'Account Login', '/login');
+	});
+	$('.demoAccountLoginButton').on('click', event => {
+		event.preventDefault();
+		user_USERNAME = 'Demo_Account';
+		let password = 'Demo_Account_Password';
+		updateJWT({username: user_USERNAME, password: password});
+	});
+}
+
+$(landingPageListeners);
