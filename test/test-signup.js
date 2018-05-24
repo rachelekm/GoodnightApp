@@ -391,7 +391,7 @@ describe('New Account Functions', function () {
         return chai.request(app).get('/account/users').then(res => {
           expect(res).to.have.status(200);
           expect(res.body).to.be.an('array');
-          expect(res.body).to.have.length(1);
+          expect(res.body).to.have.length(0);
         });
       });
       it('Should return an array of users', function () {
@@ -413,7 +413,17 @@ describe('New Account Functions', function () {
           .then(res => {
             expect(res).to.have.status(200);
             expect(res.body).to.be.an('array');
-            expect(res.body).to.have.length(3);
+            expect(res.body).to.have.length(2);
+            expect(res.body[0]).to.have.keys(
+              'username',
+              'firstName',
+              'lastName',
+              'id',
+              'accountCreated'
+            );
+            expect(res.body[0].username).to.equal(username);
+            expect(res.body[0].firstName).to.equal(firstName);
+            expect(res.body[0].lastName).to.equal(lastName);
             expect(res.body[1]).to.have.keys(
               'username',
               'firstName',
@@ -421,19 +431,9 @@ describe('New Account Functions', function () {
               'id',
               'accountCreated'
             );
-            expect(res.body[1].username).to.equal(username);
-            expect(res.body[1].firstName).to.equal(firstName);
-            expect(res.body[1].lastName).to.equal(lastName);
-            expect(res.body[2]).to.have.keys(
-              'username',
-              'firstName',
-              'lastName',
-              'id',
-              'accountCreated'
-            );
-            expect(res.body[2].username).to.equal(username2);
-            expect(res.body[2].firstName).to.equal(firstName2);
-            expect(res.body[2].lastName).to.equal(lastName2);
+            expect(res.body[1].username).to.equal(username2);
+            expect(res.body[1].firstName).to.equal(firstName2);
+            expect(res.body[1].lastName).to.equal(lastName2);
             });
           });
       });
