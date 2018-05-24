@@ -57,7 +57,17 @@ function signUpErrorWindow(err){
 }
 
 function showGeneralErrorWindow(err){
+	if(err.responseJSON.message === 'A dream entry has already been submitted today'){
+		$('#pageContents').append(`<div class='oneEntryPerDay'><p>It looks like you've already entered a dream for today! If you would like to edit last night's dream, click <a href='dreamlog.html'>here.</a></p></div>`);
+		$('html, body').animate({ 
+   		scrollTop: $(document).height()-$(window).height()}, 
+   		250, 
+   		"linear"
+		);
+	}
+	else {
 	$('#errorWarningWindow').show();
+	}
 }
 
 function showRefreshTokenWindow(err){
@@ -107,7 +117,7 @@ function createEditForm(objectInfo){
         		<input type='text' name='dreamKeywordsInput2' value='${objectInfo.keywords[1]}' placeholder='${objectInfo.keywords[1]}' aria-label="dream-keyword-input">
         		<input type='text' name='dreamKeywordsInput3' value='${objectInfo.keywords[2]}' placeholder='${objectInfo.keywords[2]}' aria-label="dream-keyword-input">
 				<legend class='moreInfoForm1EDIT'>Was this a nightmare?
-            	<input type='radio' name='dreamTypeInput' value='yes' aria-label="dream-type-slection-option1"><label for='dreamTypeInput'>Yes</label>
+            	<input type='radio' name='dreamTypeInput' value='yes' aria-label="dream-type-slection-option1" required><label for='dreamTypeInput'>Yes</label>
             	<input type='radio' name='dreamTypeInput' value='no' aria-label="dream-type-slection-option2"><label for='dreamTypeInput'>No</label>
             	</legend>
 				<legend class='moreInfoForm2EDIT'>Select how you feel below:
@@ -336,13 +346,13 @@ function displayDreamLogFILTER(data){
 	let searchQuery = data.query;
 	$('input[name="dreamSearchInput"]').val('');
 	$('.searchDreamForm').append(`<button type='button' role='button' class='viewAllDreamEntries'>View All</button>`);
-	$('.searchDreamForm').append(`<div class='searchTextBoxLog'>Searched for: ${searchQuery}</button>`);
 	if(data.entries.length === 0){
-		$('#dreamLog').append(`<div class='dreamEntry'><h1>You haven't entered any dreams yet! Click <a href='newentry.html'>here</a> to record your first dream.</h1>
+		$('#dreamLog').append(`<div class='dreamEntryNone'><h1>You haven't entered any dreams yet! Click <a href='newentry.html'>here</a> to record your first dream.</h1>
 		<p>Once you record your dream, come back here to view and search your dream bank.</p>
 		</div>`);
 	}
 	else{
+	$('.searchDreamForm').append(`<div class='searchTextBoxLog'>Searched for: ${searchQuery}</button>`);
 	data.entries.reverse().forEach(object =>{
 		let date = new Date(object.submitDate);
 		$('#dreamLog').append(`<div class='dreamEntry' value=${object._id}>
@@ -386,8 +396,9 @@ function displayDreamLogFILTER(data){
 }
 
 function displayDreamLog(data){
-	if(data.entries === 0){
-		$('#dreamLog').append(`<div class='dreamEntry'><h1>You haven't entered any dreams yet! Click <a href='newentry.html'>here</a> to record your first dream.</h1>
+	console.log(data);
+	if(!data.length > 0){
+		$('#dreamLog').append(`<div class='dreamEntryNone'><h1>You haven't entered any dreams yet! Click <a href='newentry.html'>here</a> to record your first dream.</h1>
 		<p>Once you record your dream, come back here to view and search your dream bank.</p>
 		</div>`);
 	}
@@ -734,6 +745,7 @@ function newEntryPageListeners(){
 		let userMood = $('select[name="userMoodInput"]').val();
 		let nightmare = $('input[type="radio"]:checked').val();
 		let newDate = new Date();
+		newDate = newDate.setHours(0,0,0,0);
 		let userLifeThemes = $('select[name="userLifeEventsInput"]').val();
 		//must break out mood into array in case of mult selections
 		let newObject = {

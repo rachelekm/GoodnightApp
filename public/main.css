@@ -525,6 +525,15 @@ input[name='dreamTypeInput']{
 .editEntryForm input[type='radio'] {
 	width: 50%;
 }
+
+.dreamEntryNone {
+	background-color: transparent;
+}
+
+.dreamEntryNone a::link, .dreamEntryNone a::visited, .dreamSummary a::link, .dreamSummary a::visited {
+	text-decoration: none;
+}
+
 #dreamReport {
 	text-align: left;
 }
