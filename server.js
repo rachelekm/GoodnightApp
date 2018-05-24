@@ -45,6 +45,10 @@ app.use('/account', newUserRouter);
 app.use('/login', authRouter);
 app.use('/dreams', dreamEntryRouter);
 
+app.use('*', (req, res) => {
+  return res.status(404).sendFile(__dirname + '/public/errorpage.html');
+});
+
 let server;
 
 function runServer(databaseUrl, port = PORT) {

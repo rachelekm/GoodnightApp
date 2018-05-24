@@ -3,8 +3,6 @@ let currentURL = window.location.href;
 let currentPATH = window.location.pathname;
 let user_USERNAME = '';
 
-//client-side: finish dream report, fix PUT endpoint error
-
 function getEndpoint(){
 	let API_ENDPOINT = window.location.href.split("/");
 	let refreshPath = API_ENDPOINT.pop();
@@ -57,6 +55,23 @@ function signUpErrorWindow(err){
 	}
 }
 
+function showGeneralErrorWindow(err){
+	$('#errorWarningWindow').show();
+}
+
+function showRefreshTokenWindow(err){
+	$('#refreshCredWarningWindow').show();
+}
+
+function errorListeners(){
+	$('.backtoHomepageButton').on('click', event => {
+		window.location.href = '/';
+	});
+	$('.refreshCredButton').on('click', event => {
+		window.location.href = '/login';
+	});
+}
+
 function displayAccountProfile(data){
 	console.log(data, 'in account profile function');
 	let newDate = makePrettyDate(data.accountCreated);
@@ -77,17 +92,6 @@ function deleteEntryWarning(id){
 
 function createEditForm(objectInfo){
 	let date = makePrettyDate(objectInfo.submitDate);
-	/*console.log(objectInfo);
-	let keywordsArray = objectInfo.keywords;
-	let keywordPlaceholderArray; 
-	for(let i=0; i<keywordsArray.length; i++){
-		if(keywordsArray[i] === 'undefined'){
-			keywordPlaceholderArray.push(`${i+1}.`);
-		}
-		else{
-			keywordPlaceholderArray.push(keywordsArray[i]);
-		}
-	}*/
 	$('#editEntryWindow').show().attr("value", objectInfo._id).html(`<div class='dreamlogEditHeader'>
 			<h3>${date}</h3>
 			<button type="button" class='exitEditEntryButton'>Exit</button>			
@@ -292,7 +296,6 @@ console.log($(this));
 		<h1>You haven't entered any dreams yet! Click<a href='newentry.html'> here </a>to record your first dream.</h1>
 		<p>Once you record your dream, come back here to view your dream journey.</p>
 		</div><div class='dreamSymbols'></div>`);
-			//$('#dreamReport').append();	
 	}
 	else{
 	let keywords = findMostCommonKeywords(data);
@@ -326,7 +329,6 @@ console.log($(this));
 }
 
 function displayDreamLogFILTER(data){
-	console.log(data, 'in display dream log filter function');
 	$('.searchDreamForm').find('.viewAllDreamEntries').remove();
 	$('.searchDreamForm').find('.searchTextBoxLog').remove();
 	$('#dreamLog').empty();
@@ -436,6 +438,12 @@ function getDreamData(){
 			url: getEndpoint(),
 			success: displayDreamLog,
 			error: function(err){
+				if(err.status===401){
+					showRefreshTokenWindow(err);
+				}
+				else{
+					showGeneralErrorWindow(err);
+				}
 				console.log(err);
 			},
 			dataType: 'json',
@@ -466,6 +474,12 @@ function refreshJWT(){
 			displayHomePage();
 		},
 		error: function(err){
+			if(err.status===401){
+				showRefreshTokenWindow(err);
+			}
+			else{
+				showGeneralErrorWindow(err);
+			}
 			console.log(err);
 		},
 		dataType: 'json',
@@ -487,6 +501,9 @@ function updateJWT(object){
 			if(err.status===401){
 				incorrectLoginWindow();
 			}
+			else{
+				showGeneralErrorWindow(err);
+			}
 			console.log(err);
 		},
 		dataType: 'json',
@@ -505,6 +522,12 @@ function dreamReportPageListeners(){
 				displayDreamReport(data);
 			},
 			error: function(err){
+				if(err.status===401){
+					showRefreshTokenWindow(err);
+				}
+				else{
+					showGeneralErrorWindow(err);
+				}
 				console.log(err);
 			},
 			dataType: 'json',
@@ -532,15 +555,7 @@ function dreamLogPageListeners(){
 	$('.searchDreamForm').submit(event => {
 		event.preventDefault();
 		$('#dreamLog').empty();
-		//let searchObj = {};
 		let search = $('input[name="dreamSearchInput"]').val();
-		/*if(moodSearch.length > 0 || moodSearch !== ''){
-			moodSearch = moodSearch.charAt(0).toUpperCase() + moodSearch.slice(1);
-			searchObj["searchMood"] = moodSearch;
-		}
-		if(keywordSearch !== '' || keywordSearch.length > 0){
-			searchObj["searchKey"] = keywordSearch;
-		}*/
 		$.ajax({
 			method: 'POST',
 			url: `${getEndpoint()}/dream-log`,
@@ -549,6 +564,12 @@ function dreamLogPageListeners(){
 				displayDreamLogFILTER(data);
 			},
 			error: function(err){
+				if(err.status===401){
+					showRefreshTokenWindow(err);
+				}
+				else{
+					showGeneralErrorWindow(err);
+				}
 				console.log(err);
 			},
 			dataType: 'json',
@@ -566,6 +587,12 @@ function dreamLogPageListeners(){
 				displayDreamLogFILTER(data);
 			},
 			error: function(err){
+				if(err.status===401){
+					showRefreshTokenWindow(err);
+				}
+				else{
+					showGeneralErrorWindow(err);
+				}
 				console.log(err);
 			},
 			dataType: 'json',
@@ -582,19 +609,17 @@ function dreamLogPageListeners(){
 				createEditForm(data);
 			},
 			error: function(err){
+				if(err.status===401){
+					showRefreshTokenWindow(err);
+				}
+				else{
+					showGeneralErrorWindow(err);
+				}	
 				console.log(err);
 			},
 			dataType: 'json',
 			beforeSend: setJWTHeader
 		});
-		/*let textObject = {
-			id: objId,
-			date: $(`div[value='${objId}']`).find('.dateHeader').text(),
-			keywords: $(`div[value='${objId}']`).find('.keywordsHeader').next().text(),
-			mood: $(`div[value='${objId}']`).find('.moodHeader').next().text(),
-			content: $(`div[value='${objId}']`).find('.dreamEntryContent').text()
-		}
-		createEditForm(textObject);*/
 	});
 	$('#editEntryWindow').on('click', '.editFormSubmitButton', event => {
 		event.preventDefault();
@@ -627,6 +652,12 @@ function dreamLogPageListeners(){
 				location.reload();
 			},
 			error: function(err){
+				if(err.status===401){
+					showRefreshTokenWindow(err);
+				}
+				else{
+					showGeneralErrorWindow(err);
+				}
 				console.log(err);
 			},
 			dataType: 'json',
@@ -653,9 +684,14 @@ function dreamLogPageListeners(){
 				location.reload();
 			},
 			error: function(err){
+				if(err.status===401){
+					showRefreshTokenWindow(err);
+				}
+				else{
+					showGeneralErrorWindow(err);
+				}
 				console.log(err);
 			},
-			//dataType: 'json',
 			beforeSend: setJWTHeader
 		});
 	});
@@ -715,6 +751,12 @@ function newEntryPageListeners(){
 				location.reload();
 			},
 			error: function(err){
+				if(err.status===401){
+					showRefreshTokenWindow(err);
+				}
+				else{
+					showGeneralErrorWindow(err);
+				}
 				console.log(err);
 			},
 			dataType: 'json',
@@ -737,6 +779,12 @@ function navigationButtonListeners(){
 			//data: JSON.stringify(newObject), 
 			success: displayAccountProfile,
 			error: function(err){
+				if(err.status===401){
+					showRefreshTokenWindow(err);
+				}
+				else{
+					showGeneralErrorWindow(err);
+				}
 				console.log(err);
 			},
 			dataType: 'json',
@@ -747,38 +795,12 @@ function navigationButtonListeners(){
 	$('#accountProfileWindow').on('click', '.closeProfileWindow', event => {
 		event.preventDefault();
 		$('#accountProfileWindow').hide().empty();
-		/*let newPath = window.location.pathname.split('/')[1];
-		console.log(newPath);
-		history.pushState(null, null, `/${newPath}`);
-		currentURL = window.location.href;*/
 	});
 	$('#accountProfileWindow').on('click', '.logOutOfAccount', event => {
 		event.preventDefault();
 		localStorage.removeItem('JWT_USER');
 		window.location.href = '/';
-	});/*
-	$('.navigationBar').on('click', '.dreamLogNavButton', function(event){
-		event.preventDefault();
-		//event.preventDefault();
-		//history.pushState({id: 'dream-log'}, 'Dream Log', '/dream-log');
-		//GET LAST 10 dream entries
-		//console.log('dream log works');
-		history.pushState(null, null, '/dreams/dream-log');
-		currentURL = window.location.href;
-		location.reload();
 	});
-	$('.navigationBar').on('click', '.dreamReportNavButton', function(event){
-		event.preventDefault();
-		history.pushState(null, null, '/dreams/dream-report');
-		currentURL = window.location.href;
-		location.reload();
-	});
-	$('.navigationBar').on('click', '.newEntryNavButton', function(event){
-		event.preventDefault();
-		history.pushState(null, null, '/dreams');
-		currentURL = window.location.href;
-		location.reload();
-	});*/
 }
 
 function homePageButtonListeners(){
@@ -839,6 +861,9 @@ function homePageButtonListeners(){
 				if(err.status===422){
 					signUpErrorWindow(err.responseJSON);
 				}
+				else{
+					showGeneralErrorWindow(err);
+				}
 				console.log(err);
 			},
 
@@ -862,6 +887,7 @@ function landingPageListeners(){
 	newEntryPageListeners();
 	dreamLogPageListeners();
 	dreamReportPageListeners();
+	errorListeners();
 	$('.getStartedButton').on('click', event => {
 		$('#homepage').show();
 		$('#landingPage').hide();
