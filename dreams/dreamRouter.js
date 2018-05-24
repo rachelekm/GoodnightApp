@@ -150,13 +150,14 @@ router.post('/dream-log', jsonParser, jwtAuth, (req, res) => {
     });*/
 //make one search object query with reg exp for exact substring match
   let query = req.body.search.toString();
+  const user = req.user.id;
   if(query.indexOf(',') != -1){
         query = query.split(', ');
   }
   console.log(query);
   if(typeof query == 'string'){
 
-  return dreamEntry.find({$or: [ { 'mood' : { $regex: query, $options: 'i' }}, { 'keywords' : { $regex: query, $options: 'i' }}, { 'content' : { $regex: query, $options: 'i' }}, { 'lifeEvents' : { $regex: query, $options: 'i' }}]}).then(function(entries){
+  return dreamEntry.find({$and: [{user: user}, {$or: [ { 'mood' : { $regex: query, $options: 'i' }}, { 'keywords' : { $regex: query, $options: 'i' }}, { 'content' : { $regex: query, $options: 'i' }}, { 'lifeEvents' : { $regex: query, $options: 'i' }}]}]}).then(function(entries){
     return res.status(200).json({query: query, entries: entries});
   })
   .catch(err => {
@@ -173,7 +174,7 @@ router.post('/dream-log', jsonParser, jwtAuth, (req, res) => {
     for (let i = 0; i < query.length; i++) {
     regex[i] = new RegExp(query[i]);
     }
-    return dreamEntry.find({$or: [ { 'mood' : { $in: regex }}, { 'keywords' : { $in: regex }}, { 'content' : { $in: regex }}, { 'lifeEvents' : { $in: regex }}]}).then(function(entries){
+    return dreamEntry.find({$and: [{user: user}, {$or: [ { 'mood' : { $in: regex }}, { 'keywords' : { $in: regex }}, { 'content' : { $in: regex }}, { 'lifeEvents' : { $in: regex }}]}]}).then(function(entries){
       return res.status(200).json({query: query, entries: entries});
     })
     .catch(err => {

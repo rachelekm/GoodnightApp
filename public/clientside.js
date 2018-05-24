@@ -33,6 +33,15 @@ const colors = ["orange", "blue", "red", "green", "purple"];
 	return colors[Math.floor(Math.random() * colors.length)];
 }
 
+function incorrectLoginWindow(){
+	$('.loginFieldset').append(`<div class='warningBoxIncorrectLogin'>Your email or password are incorrect, please try again.</div>`)
+}
+
+function signUpErrorWindow(err){
+	$('.signUpFieldset').find(`input[placeholder="${err.location}"]`).addClass('locationSelection');
+	$('.signUpFieldset').append(`<div class='warningBoxIncorrectLogin'>${err.message}</div>`)
+}
+
 function displayAccountProfile(data){
 	console.log(data, 'in account profile function');
 	let newDate = makePrettyDate(data.accountCreated);
@@ -263,7 +272,14 @@ function displayDreamReport(data){
 $('#calendar').on('click', function(event){
 console.log($(this));
 });
-	console.log(data);
+	if(data.length === 0){
+	$('#dreamReport').append(`<div class='dreamSummary'>
+		<h1>You haven't entered any dreams yet! Click<a href='newentry.html'> here </a>to record your first dream.</h1>
+		<p>Once you record your dream, come back here to view your dream journey.</p>
+		</div><div class='dreamSymbols'></div>`);
+			//$('#dreamReport').append();	
+	}
+	else{
 	let keywords = findMostCommonKeywords(data);
 	let numKeywords = keywords.length;
 	$('#dreamReport').append(`<div class='dreamSummary'>
@@ -273,19 +289,24 @@ console.log($(this));
 			$('#dreamReport').append();
 	if(numKeywords > 5){
 		for(let i =0; i < 5; i++){
+			if(keywords[i].keyword !== ''){
 			let color = randomColorGenerator();
 			$('#dreamReport').find('.dreamSymbols').append(
 				`<div class='symbolBox ${color}'>
 				<button type='button' role='button' class='extraSymbolInfo ${color} ${i}'>${keywords[i].keyword}</button></div>`);
+			}
 		}
 	}
 	else {
 		for(let i =0; i < numKeywords; i++){
+			if(keywords[i].keyword !== ''){
 			let color = randomColorGenerator();
 			$('#dreamReport').find('.dreamSymbols').append(
 				`<div class='symbolBox ${color}'>
 				<button type='button' role='button' class='extraSymbolInfo ${color} ${i}'>${keywords[i].keyword}</button></div>`);
+			}
 		}
+	}
 	}
 }
 
@@ -448,6 +469,9 @@ function updateJWT(object){
 			displayHomePage();
 		},
 		error: function(err){
+			if(err.status===401){
+				incorrectLoginWindow();
+			}
 			console.log(err);
 		},
 		dataType: 'json',
@@ -483,6 +507,7 @@ function dreamReportPageListeners(){
 
 function dreamLogPageListeners(){
 	getDreamData();
+	$('.searchDreamForm').on('click', '.viewAllDreamEntries', event => {window.location.href = 'dreamlog.html';});
 	$('#dreamLog').on('click', '.dreamEntry', event => {
 		let selectedID = event.currentTarget.attributes[1].textContent;
 		console.log(selectedID);
@@ -787,6 +812,8 @@ function homePageButtonListeners(){
 	});
 	$('.signUpForm').submit(event => {
 		event.preventDefault();
+		$('.signUpFieldset').find(`input`).removeClass('locationSelection');
+		$('.signUpFieldset').find('.warningBoxIncorrectLogin').remove();
 		user_USERNAME = $('input[aria-label="sign-up-form-username-input"]').val();
 		let password = $('input[aria-label="sign-up-form-password-input"]').val();
 		let first_Name = $('input[aria-label="sign-up-form-first-name-input"]').val().toString();
@@ -799,8 +826,12 @@ function homePageButtonListeners(){
 				updateJWT({username: user_USERNAME, password: password});
 			},
 			error: function(err){
+				if(err.status===422){
+					signUpErrorWindow(err.responseJSON);
+				}
 				console.log(err);
 			},
+
 			dataType: 'json',
 			contentType: 'application/json'
 		});
