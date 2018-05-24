@@ -34,6 +34,7 @@ describe('Dream Journal', function() {
     return chai.request(app)
       .get('/account/users')
       .then(function(res){
+        console.log(res.body);
         return chai.request(app)
           .get('/dreams')
           .set('Authorization', `Bearer ${AuthToken(res.body)}`);
