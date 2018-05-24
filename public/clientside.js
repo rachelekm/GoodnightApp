@@ -48,6 +48,7 @@ function signUpErrorWindow(err){
 		$('.signUpFieldset').append(`<div class='warningBoxIncorrectLogin'>${message}</div>`);
 	}
 	else {
+		newLocation = err.location;
 		if(err.location === 'firstName'){ newLocation = 'first name'};
 		if(err.location === 'lastName'){ newLocation = 'last name'};
 		$('.signUpFieldset').find(`input[placeholder="${newLocation}"]`).addClass('locationSelection');
@@ -337,7 +338,9 @@ function displayDreamLogFILTER(data){
 	$('.searchDreamForm').append(`<button type='button' role='button' class='viewAllDreamEntries'>View All</button>`);
 	$('.searchDreamForm').append(`<div class='searchTextBoxLog'>Searched for: ${searchQuery}</button>`);
 	if(data.entries.length === 0){
-		$('#dreamLog').append(`<div class='dreamEntry'>No results for this search</div>`);
+		$('#dreamLog').append(`<div class='dreamEntry'><h1>You haven't entered any dreams yet! Click <a href='newentry.html'>here</a> to record your first dream.</h1>
+		<p>Once you record your dream, come back here to view and search your dream bank.</p>
+		</div>`);
 	}
 	else{
 	data.entries.reverse().forEach(object =>{
@@ -383,9 +386,10 @@ function displayDreamLogFILTER(data){
 }
 
 function displayDreamLog(data){
-	console.log(data, 'in display dream log function');
 	if(data.entries === 0){
-		$('#dreamLog').append(`<div class='dreamEntry'>No results for this search</div>`);
+		$('#dreamLog').append(`<div class='dreamEntry'><h1>You haven't entered any dreams yet! Click <a href='newentry.html'>here</a> to record your first dream.</h1>
+		<p>Once you record your dream, come back here to view and search your dream bank.</p>
+		</div>`);
 	}
 	else{
 	data.reverse().forEach(object =>{

@@ -11,19 +11,6 @@ passport.use(jwtStrategy);
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
 const {dreamEntry} = require('./models');
-/*
-router.get('/', (req, res)=>{
-  res.sendFile(path.join(__dirname, '..', '/public/accounthomepage.html'));
-  return res.status(200);
-});
-
-router.get('/dream-log', (req, res)=>{
-  return res.status(200).sendFile(path.join(__dirname, '..', '/public/dreamlog.html'));
-});
-
-router.get('/dream-report', (req, res)=>{
-  return res.status(200).sendFile(path.join(__dirname, '..', '/public/dreamreport.html'));
-});*/
 
 router.get('/', jwtAuth, (req, res)=>{
   const cutoffDate = new Date()
