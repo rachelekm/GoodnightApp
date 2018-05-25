@@ -15,12 +15,25 @@ function makePrettyDate(data){
 }
 
 function updateCalendar(symbol, dataArray){
+	const symbols = ['keyword', '💭', '🔔', '⚡'];
+	let index = symbols.indexOf(symbol);
+	$("#calendar").fullCalendar('removeEvents', function(eventObject) {
+			if(eventObject.id === index || eventObject.id === 0){
+				return false;
+			}
+			else {
+				return true;
+			}
+	});
+	
 	let eventsArray = dataArray.map(object => {
 		return {
 			title: `${symbol}`,
+			id: index,
 			start: `${object.submitDate.slice(0, 10)}`,
 			allDay: true,
-			textColor: 'white'
+			imageurl: 'https://i.imgur.com/BC4IfeR.png',
+			description: `${object._id}`
 		};
 	});
 	return eventsArray;
@@ -281,32 +294,49 @@ function findMostCommonKeywords(dreams){
 return countedKeywords.sort(highestCount);
 }
 
+function viewCalendarEvents(data, selection){
+	console.log(data);
+	const allMoods = ['Happy', 'Calm', 'Lethargic', 'Emotional', 'Anxious', 'Irritated', 'Depressed', 'Excited', 'Nervous', 'Apathetic'];
+	const allLifeEvents = ['Opportunities and Professional Development', 'Sense of Purpose', 'Home and Domestic Development', 'Family', 'Relationships', 'School or Work Expectations', 'Creative Pursuits', 'Security and Control', 'Religion or Spirituality', 'Health', 'Money', 'Aging', 'Physical Appearance'];
+
+	if(selection==='Moods 💭'){
+		console.log('moods');
+		let eventsReference = updateCalendar('💭', data);
+		$('#calendar').fullCalendar('addEventSource', eventsReference);
+	}
+	else if(selection==='Life Events 🔔'){
+		console.log('events');
+		let eventsReference = updateCalendar('🔔', data);
+		$('#calendar').fullCalendar('addEventSource', eventsReference);
+	}
+	else if(selection==='Nightmares ⚡'){
+		console.log('nightmares');
+		let dataArray = [];
+		data.forEach(object=> {
+			if(object.nightmare === 'yes'){
+				dataArray.push(object);
+			}
+		});
+		let eventsReference = updateCalendar('⚡', dataArray);
+		$('#calendar').fullCalendar('addEventSource', eventsReference);
+	}
+}
+
 function displayDreamReport(data){
 	$('#calendar').fullCalendar({
-  		/*events: [
-    		{
-      		title: 'Event1',
-      		start: '2018-05-05',
-      		allDay: true,
-      		rendering: 'background'
-    		},
-    		{
-      		title: 'Event2',
-      		start: '2018-05-07',
-      		allDay: true,
-      		rendering: 'background'
-    		}
-    		// etc...
-  		],
-/*
-		eventClick: function(event) {
-			console.log('cal event!');
-    	}*/
-	
-  });
-$('#calendar').on('click', function(event){
-console.log($(this));
-});
+		eventClick: function(calEvent, jsEvent, view) {
+
+    		console.log(calEvent);
+
+    // change the border color just for fun
+
+  	}});
+  	viewCalendarEvents(data, 'Nightmares ⚡');
+	$('#dreamReport').on('change', 'select', function(){
+		event.preventDefault();
+		let selection = $('#dreamReport').find('select :selected').text();
+		viewCalendarEvents(data, selection);
+	});
 	if(data.length === 0){
 	$('#dreamReport').append(`<div class='dreamSummary'>
 		<h1>You haven't entered any dreams yet! Click<a href='newentry.html'> here </a>to record your first dream.</h1>
@@ -314,35 +344,41 @@ console.log($(this));
 		</div><div class='dreamSymbols'></div>`);
 	}
 	else{
-	let keywords = findMostCommonKeywords(data);
-	let numKeywords = keywords.length;
-	let colors = ["orange", "blue", "red", "green", "purple"];
-	$('#dreamReport').append(`<div class='dreamSummary'>
-		<h1>Last 30 Days:</h1>
-		<p>Most common dream symbols:</p>
-		</div><div class='dreamSymbols'></div>`);
-			$('#dreamReport').append();
-	colors = colors.sort(shuffle);
-	if(numKeywords > 5){
-		for(let i =0; i < 5; i++){
-			if(keywords[i].keyword !== ''){
-			let color = colors[i];
-			$('#dreamReport').find('.dreamSymbols').append(
+		viewCalendarEvents(data, 'Nightmares');
+		let keywords = findMostCommonKeywords(data);
+		let numKeywords = keywords.length;
+		let colors = ["orange", "blue", "red", "green", "purple"];
+		$('#dreamReport').append(`<div class='dreamSummary'>
+			<h1>Last 30 Days:</h1>
+			<p>Most common dream symbols:</p>
+			</div><div class='dreamSymbols'></div>
+			<div class='calendarSelection'>Viewing on calendar:
+			<select>
+				<option value="0">Nightmares ⚡</option>
+				<option value="1">Moods 💭</option>
+				<option value="2">Life Events 🔔</option>
+			</select></div>`);
+		colors = colors.sort(shuffle);
+		if(numKeywords > 5){
+			for(let i =0; i < 5; i++){
+				if(keywords[i].keyword !== ''){
+				let color = colors[i];
+				$('#dreamReport').find('.dreamSymbols').append(
 				`<div class='symbolBox ${color}'>
 				<button type='button' role='button' class='extraSymbolInfo ${color} ${i}'>${keywords[i].keyword}</button></div>`);
+				}	
 			}
 		}
-	}
-	else {
-		for(let i =0; i < numKeywords; i++){
-			if(keywords[i].keyword !== ''){
-			let color = colors[i];
-			$('#dreamReport').find('.dreamSymbols').append(
+		else {
+			for(let i =0; i < numKeywords; i++){
+				if(keywords[i].keyword !== ''){
+				let color = colors[i];
+				$('#dreamReport').find('.dreamSymbols').append(
 				`<div class='symbolBox ${color}'>
 				<button type='button' role='button' class='extraSymbolInfo ${color} ${i}'>${keywords[i].keyword}</button></div>`);
+				}
 			}
 		}
-	}
 	}
 }
 
@@ -560,7 +596,13 @@ function dreamReportPageListeners(){
 		$('.symbolsMoreInfoBox').show();
 		let index = $(this).find('button').attr('class').slice(-1);
 		let targetSymbol = $(this).find('button').text();
-		$('#calendar').fullCalendar('removeEvents');
+		/*$("#calendar").fullCalendar('removeEvents', function(eventObject) {
+			if(eventObject.id !== 0){
+				console.log(eventObject);
+			return true;
+			}
+		});*/
+
 		displaySymbolDetails(dreams, targetSymbol, index);
 	});
 }

@@ -564,6 +564,22 @@ input[name='dreamTypeInput']{
 	clear:both;
 }
 
+.calendarSelection {
+	position: relative;
+	margin-bottom: 15px;
+}
+
+.calendarSelection select{
+	font-size: 12px;
+	padding-left: 5px;
+	height: 30px;
+	font-weight: lighter;
+}
+
+.calendarSelection option{
+	padding: 0px;
+}
+
 #calendar .fc-toolbar.fc-header-toolbar{
 	margin-bottom: 2px;
 }
