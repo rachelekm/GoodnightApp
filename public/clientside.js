@@ -17,15 +17,17 @@ function makePrettyDate(data){
 function updateCalendar(symbol, dataArray){
 	const symbols = ['keyword', '💭', '🔔', '⚡'];
 	let index = symbols.indexOf(symbol);
+	if(index !== 1 || index !== 2 || index !== 3){
+		index = 0;
+	}
 	$("#calendar").fullCalendar('removeEvents', function(eventObject) {
-			if(eventObject.id === index || eventObject.id === 0){
-				return false;
-			}
-			else {
+			if(eventObject.id === index) {
 				return true;
 			}
+			else{
+				return false;
+			}
 	});
-	
 	let eventsArray = dataArray.map(object => {
 		return {
 			title: `${symbol}`,
@@ -255,7 +257,7 @@ function displaySymbolDetails(data, symbol, index){
 		`<h4>Most likely dreamt of ${symbol} when feeling: ${moodArrayString}</h4>
 		<h4>Most likely dreamt of ${symbol} when dealing with: ${eventsArrayString}</h4>`
 	);
-	let eventsReference = updateCalendar(symbol, dataWithSymbol);
+	let eventsReference = updateCalendar('keyword', dataWithSymbol);
 	$('#calendar').fullCalendar('addEventSource', eventsReference);
 	$('html, body').animate({ 
    		scrollTop: $(document).height()-$(window).height()}, 
@@ -322,16 +324,35 @@ function viewCalendarEvents(data, selection){
 	}
 }
 
+function displayCalEventDetails(data, calEvent){
+	$('.symbolsMoreInfoBox').empty();
+	console.log(calEvent);
+	$('.eventsMoreInfoBox').empty().show();
+	let dreamEntry;
+	data.forEach(object=>{
+		if(object._id == calEvent.description){
+			dreamEntry = object;
+		}
+	});
+	let keywordsString = dreamEntry.keywords.join(", ");
+	let moodString = dreamEntry.mood.join(", ");
+	let eventsString = dreamEntry.lifeEvents.join(", ");
+	$('.eventsMoreInfoBox').append(`<h4>${makePrettyDate(dreamEntry.submitDate)}</h4><p>Keywords: ${keywordsString}</br>Mood: ${moodString}</br>Life Events: ${eventsString}</br>Nightmare:</p></br><button type='button' role='button' class='seeDreamByID' value='${dreamEntry._id}'>Read Dream</button>`);
+    $('html, body').animate({ 
+   		scrollTop: $(document).height()-$(window).height()}, 
+   		300, 
+   		"linear"
+	);
+}
+
 function displayDreamReport(data){
+
 	$('#calendar').fullCalendar({
 		eventClick: function(calEvent, jsEvent, view) {
-
-    		console.log(calEvent);
-
-    // change the border color just for fun
-
+			if(calEvent.title === '💭' ||calEvent.title === '⚡'  || calEvent.title === '🔔' ){
+				displayCalEventDetails(data, calEvent);
+			}
   	}});
-  	viewCalendarEvents(data, 'Nightmares ⚡');
 	$('#dreamReport').on('change', 'select', function(){
 		event.preventDefault();
 		let selection = $('#dreamReport').find('select :selected').text();
@@ -344,7 +365,7 @@ function displayDreamReport(data){
 		</div><div class='dreamSymbols'></div>`);
 	}
 	else{
-		viewCalendarEvents(data, 'Nightmares');
+  		viewCalendarEvents(data, 'Nightmares ⚡');
 		let keywords = findMostCommonKeywords(data);
 		let numKeywords = keywords.length;
 		let colors = ["orange", "blue", "red", "green", "purple"];
@@ -569,6 +590,10 @@ function updateJWT(object){
 	});
 }
 
+function displayDreamWindow(data){
+	$('.dreamContentWindow').show().append(`<div class='dreamWindowHeader'><button role='button' type='button' class='exitDreamWindow'>EXIT</button></div><div class='contentsection'>${data.content}</div>`);
+}
+
 function dreamReportPageListeners(){
 	let dreams;
 	if(currentPATH === '/dreamreport.html'){
@@ -593,6 +618,7 @@ function dreamReportPageListeners(){
 		});
 	}
 	$('#dreamReport').on('click', '.symbolBox', function(){
+		$('.eventsMoreInfoBox').empty().hide();
 		$('.symbolsMoreInfoBox').show();
 		let index = $(this).find('button').attr('class').slice(-1);
 		let targetSymbol = $(this).find('button').text();
@@ -605,6 +631,30 @@ function dreamReportPageListeners(){
 
 		displaySymbolDetails(dreams, targetSymbol, index);
 	});
+	 $('.eventsMoreInfoBox').on('click', '.seeDreamByID', function(event){
+  		let objID = $(this).val();
+  		$.ajax({
+			method: 'GET',
+			url: `dreams/${objID}`,
+			success: function(data){
+				displayDreamWindow(data);
+			},
+			error: function(err){
+				if(err.status===401){
+					showRefreshTokenWindow(err);
+				}
+				else{
+					showGeneralErrorWindow(err);
+				}	
+				console.log(err);
+			},
+			dataType: 'json',
+			beforeSend: setJWTHeader
+		});
+	});
+	 $('.dreamContentWindow').on('click', '.exitDreamWindow', function(event){
+	 	$('.dreamContentWindow').empty().hide();
+	 });
 }
 
 function dreamLogPageListeners(){

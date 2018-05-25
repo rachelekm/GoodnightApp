@@ -420,7 +420,7 @@ input[name='dreamTypeInput']{
 	margin: 5px;
 }
 
-#editEntryWindow, #deleteEntryWarning, #errorWarningWindow, #refreshCredWarningWindow {
+#editEntryWindow, #deleteEntryWarning, #errorWarningWindow, #refreshCredWarningWindow, .dreamContentWindow {
 	z-index: 10;
 	overflow-y: scroll;
 	overflow-x: hidden;
@@ -434,6 +434,41 @@ input[name='dreamTypeInput']{
 	background-color: white;
 	border-radius: 2px;
 	box-shadow: 3px 3px 10px black;
+}
+
+.dreamContentWindow .dreamWindowHeader, .dreamContentWindow .contentsection{
+	background-color: transparent;
+}
+
+.dreamWindowHeader button {
+	float: right;
+}
+
+.contentsection{
+	padding: 20px;
+	padding-top: 40px;
+	font-style: italic;
+
+}
+
+.eventsMoreInfoBox {
+	background-color: white;
+	text-align: left;
+	padding-bottom: 10px;
+}
+
+.eventsMoreInfoBox *{
+	background-color: transparent;
+}
+
+.eventsMoreInfoBox button{
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.eventsMoreInfoBox h4, .eventsMoreInfoBox p{
+	margin: 0px;
+	padding: 10px;
 }
 
 #refreshCredWarningWindow h2, #errorWarningWindow h2{
@@ -450,6 +485,16 @@ input[name='dreamTypeInput']{
 	display: block;
 	width: 85%;
 	padding: 15px;
+	background-color: transparent;
+}
+
+.seeDreamByID{
+	border: 3px solid #c5d5e2;
+	border-radius: 15px;
+	font-size: 12px;
+	display: block;
+	width: 85%;
+	padding: 5px;
 	background-color: transparent;
 }
 
