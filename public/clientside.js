@@ -234,7 +234,7 @@ function findMostCommonEvents(data){
 return finalArray;
 }
 
-function displaySymbolDetails(data, symbol, index){
+function displaySymbolDetails(data, symbol, index, color){
 	let dataWithSymbol = [];
 	data.forEach(object=> {
 		object.keywords.forEach(item=>{
@@ -254,16 +254,19 @@ function displaySymbolDetails(data, symbol, index){
 		eventsArrayString = lifeEventsArray.join(", ");
 	}
 	$('.symbolsMoreInfoBox').empty().addClass('moreInfoCSS').append(
-		`<h4>Most likely dreamt of ${symbol} when feeling: ${moodArrayString}</h4>
-		<h4>Most likely dreamt of ${symbol} when dealing with: ${eventsArrayString}</h4>`
+		`<h3>Most likely dreamt of ${symbol}...</h3> 
+		<h4>When feeling: ${moodArrayString}</h4>
+		<h4>When thinking about: ${eventsArrayString}</h4>`
 	);
-	let eventsReference = updateCalendar('keyword', dataWithSymbol);
+	let eventsReference = updateCalendar(color, dataWithSymbol);
 	$('#calendar').fullCalendar('addEventSource', eventsReference);
 	$('html, body').animate({ 
    		scrollTop: $(document).height()-$(window).height()}, 
    		250, 
    		"linear"
 	);
+	$('.fc-title').addClass(color).addClass('transparentText');
+
 }
 
 function highestCount(a, b){
@@ -337,7 +340,7 @@ function displayCalEventDetails(data, calEvent){
 	let keywordsString = dreamEntry.keywords.join(", ");
 	let moodString = dreamEntry.mood.join(", ");
 	let eventsString = dreamEntry.lifeEvents.join(", ");
-	$('.eventsMoreInfoBox').append(`<h4>${makePrettyDate(dreamEntry.submitDate)}</h4><p>Keywords: ${keywordsString}</br>Mood: ${moodString}</br>Life Events: ${eventsString}</br>Nightmare:</p></br><button type='button' role='button' class='seeDreamByID' value='${dreamEntry._id}'>Read Dream</button>`);
+	$('.eventsMoreInfoBox').append(`<h4>${makePrettyDate(dreamEntry.submitDate)}</h4><p>Keywords: ${keywordsString}</br>Mood: ${moodString}</br>Life Events: ${eventsString}</br>Nightmare: ${dreamEntry.nightmare}</p></br><button type='button' role='button' class='seeDreamByID' value='${dreamEntry._id}'>Read Dream</button>`);
     $('html, body').animate({ 
    		scrollTop: $(document).height()-$(window).height()}, 
    		300, 
@@ -370,8 +373,8 @@ function displayDreamReport(data){
 		let numKeywords = keywords.length;
 		let colors = ["orange", "blue", "red", "green", "purple"];
 		$('#dreamReport').append(`<div class='dreamSummary'>
-			<h1>Last 30 Days:</h1>
-			<p>Most common dream symbols:</p>
+			<h1>Most common dream symbols:</h1>
+			<p>Last 30 days:</p>
 			</div><div class='dreamSymbols'></div>
 			<div class='calendarSelection'>Viewing on calendar:
 			<select>
@@ -405,18 +408,19 @@ function displayDreamReport(data){
 
 function displayDreamLogFILTER(data){
 	$('.searchDreamForm').find('.viewAllDreamEntries').remove();
-	$('.searchDreamForm').find('.searchTextBoxLog').remove();
-	$('#dreamLog').empty();
+	$('.searchDreamForm').find('.searchTextBoxLog').remove().hide();
+	$('#dreamLog').empty().addClass('dreamLogFilteredView');
 	let searchQuery = data.query;
 	$('input[name="dreamSearchInput"]').val('');
-	$('.searchDreamForm').append(`<button type='button' role='button' class='viewAllDreamEntries'>View All</button>`);
 	if(data.entries.length === 0){
 		$('#dreamLog').append(`<div class='dreamEntryNone'><h1>You haven't entered any dreams yet! Click <a href='newentry.html'>here</a> to record your first dream.</h1>
 		<p>Once you record your dream, come back here to view and search your dream bank.</p>
 		</div>`);
 	}
 	else{
-	$('.searchDreamForm').append(`<div class='searchTextBoxLog'>Searched for: ${searchQuery}</button>`);
+		if(searchQuery !== "" || searchQuery !== " "){
+			$('.searchDreamForm').append(`<div class='searchTextBoxLog'>Showing dreams with: ${searchQuery}</button>`);
+		}
 	data.entries.reverse().forEach(object =>{
 		let date = new Date(object.submitDate);
 		$('#dreamLog').append(`<div class='dreamEntry' value=${object._id}>
@@ -460,7 +464,7 @@ function displayDreamLogFILTER(data){
 }
 
 function displayDreamLog(data){
-	console.log(data);
+	$('#dreamLog').empty().removeClass('dreamLogFilteredView');
 	if(!data.length > 0){
 		$('#dreamLog').append(`<div class='dreamEntryNone'><h1>You haven't entered any dreams yet! Click <a href='newentry.html'>here</a> to record your first dream.</h1>
 		<p>Once you record your dream, come back here to view and search your dream bank.</p>
@@ -494,7 +498,7 @@ function displayDreamLog(data){
 		});
 		object.mood.forEach(item => {
 			color = randomColorGenerator();
-			if(item.length === 'null'){
+			if(item.length > 0){
 			$('#dreamLog').find(`.moreDreamEntryBox${object._id} .moodSection div`)
 			.append(`<button type='button' role='button' class='tagButtons ${color}'>${item}</button>`);
 		}
@@ -620,16 +624,11 @@ function dreamReportPageListeners(){
 	$('#dreamReport').on('click', '.symbolBox', function(){
 		$('.eventsMoreInfoBox').empty().hide();
 		$('.symbolsMoreInfoBox').show();
+		let color = $(this).find('button').attr('class').split(' ')[1];
+		console.log(color);
 		let index = $(this).find('button').attr('class').slice(-1);
 		let targetSymbol = $(this).find('button').text();
-		/*$("#calendar").fullCalendar('removeEvents', function(eventObject) {
-			if(eventObject.id !== 0){
-				console.log(eventObject);
-			return true;
-			}
-		});*/
-
-		displaySymbolDetails(dreams, targetSymbol, index);
+		displaySymbolDetails(dreams, targetSymbol, index, color);
 	});
 	 $('.eventsMoreInfoBox').on('click', '.seeDreamByID', function(event){
   		let objID = $(this).val();
