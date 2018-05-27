@@ -173,7 +173,7 @@ text-color: #243647;
 .warningBoxIncorrectLogin {
 	margin-top: 10px;
 	padding: 20px;
-	background-color: #c5d5e2;
+	background-color: white;
 	color: red;
 	border: 1px solid red;
 	border-radius: 2px;
@@ -423,8 +423,8 @@ input[name='dreamTypeInput']{
 	display: inline-block;
 }
 
-.dreamlogEditHeader h3 {
-	width: 63%;
+.dreamlogEditHeader h1 {
+	font-size: 20px;
 	float: left;
 	margin: 10px;
 }
@@ -467,6 +467,10 @@ input[name='dreamTypeInput']{
 
 }
 
+.moreInfoForm1EDIT fieldset{
+	border: none;
+}
+
 .eventsMoreInfoBox {
 	background-color: white;
 	text-align: left;
@@ -482,7 +486,11 @@ input[name='dreamTypeInput']{
 	margin-right: auto;
 }
 
-.eventsMoreInfoBox h4, .eventsMoreInfoBox p{
+.eventsMoreInfoBox h1{
+	font-size: 20px;
+}
+
+.eventsMoreInfoBox h1, .eventsMoreInfoBox p{
 	margin: 0px;
 	padding: 10px;
 }
@@ -584,7 +592,7 @@ input[name='dreamTypeInput']{
 }
 
 .editEntryForm input[type='radio'] {
-	width: 50%;
+	width: 10%;
 }
 
 .dreamEntryNone {

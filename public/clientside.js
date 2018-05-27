@@ -124,7 +124,7 @@ function deleteEntryWarning(id){
 function createEditForm(objectInfo){
 	let date = makePrettyDate(objectInfo.submitDate);
 	$('#editEntryWindow').show().attr("value", objectInfo._id).html(`<div class='dreamlogEditHeader'>
-			<h3>${date}</h3>
+			<h1>${date}</h1>
 			<button type="button" class='exitEditEntryButton'>Exit</button>			
 			</div>
 			<form class="editEntryForm">
@@ -137,8 +137,10 @@ function createEditForm(objectInfo){
         		<input type='text' name='dreamKeywordsInput2' value='${objectInfo.keywords[1]}' placeholder='${objectInfo.keywords[1]}' aria-label="dream-keyword-input">
         		<input type='text' name='dreamKeywordsInput3' value='${objectInfo.keywords[2]}' placeholder='${objectInfo.keywords[2]}' aria-label="dream-keyword-input">
 				<legend class='moreInfoForm1EDIT'>Was this a nightmare?
+				<fieldset>
             	<input type='radio' name='dreamTypeInput' value='yes' aria-label="dream-type-slection-option1" required><label for='dreamTypeInput'>Yes</label>
             	<input type='radio' name='dreamTypeInput' value='no' aria-label="dream-type-slection-option2"><label for='dreamTypeInput'>No</label>
+            	</fieldset>
             	</legend>
 				<legend class='moreInfoForm2EDIT'>Select how you feel below:
 				<select name='userMoodInput' aria-label="user-mood-input" multiple size='3' required>
@@ -340,7 +342,7 @@ function displayCalEventDetails(data, calEvent){
 	let keywordsString = dreamEntry.keywords.join(", ");
 	let moodString = dreamEntry.mood.join(", ");
 	let eventsString = dreamEntry.lifeEvents.join(", ");
-	$('.eventsMoreInfoBox').append(`<h4>${makePrettyDate(dreamEntry.submitDate)}</h4><p>Keywords: ${keywordsString}</br>Mood: ${moodString}</br>Life Events: ${eventsString}</br>Nightmare: ${dreamEntry.nightmare}</p></br><button type='button' role='button' class='seeDreamByID' value='${dreamEntry._id}'>Read Dream</button>`);
+	$('.eventsMoreInfoBox').append(`<h1>${makePrettyDate(dreamEntry.submitDate)}</h1><p>Keywords: ${keywordsString}</br>Mood: ${moodString}</br>Life Events: ${eventsString}</br>Nightmare: ${dreamEntry.nightmare}</p></br><button type='button' role='button' class='seeDreamByID' value='${dreamEntry._id}'>Read Dream</button>`);
     $('html, body').animate({ 
    		scrollTop: $(document).height()-$(window).height()}, 
    		300, 
@@ -428,9 +430,9 @@ function displayDreamLogFILTER(data){
 			<button type="button" class='editEntryButton'>Edit</button>
 			<button type="button" class='deleteEntryButton'>Delete</button>
 		</div>
-		<h3 class='dateHeader'>${date.toString().substring(0,3)} ${date.toLocaleDateString()}</h3>
+		<h1 class='dateHeader'>${date.toString().substring(0,3)} ${date.toLocaleDateString()}</h1>
 		<p class='dreamEntryContent'>${object.content}</p>
-		<button type='button' role='button' class='seeMoreLogEntry${object._id}'><img class='seeMoreImage' src='https://i.imgur.com/lX9FEcH.png?1'/></button>
+		<button type='button' role='button' class='seeMoreLogEntry${object._id}'><img class='seeMoreImage' src='https://i.imgur.com/lX9FEcH.png?1' alt='expand view icon'/></button>
 		<div class='moreDreamEntryBox${object._id}' hidden><div class='keywordsSection'><h4>Keywords:</h4><div class='tags'></div></div>
 		<div class='moodSection'><h4>Mood:</h4><div class='tags'></div></div>
 		<div class='nightmareSection'><h4>Nightmare:</h4><p>${object.nightmare}</p></div>
@@ -479,9 +481,9 @@ function displayDreamLog(data){
 			<button type="button" class='editEntryButton'>Edit</button>
 			<button type="button" class='deleteEntryButton'>Delete</button>
 		</div>
-		<h3 class='dateHeader'>${date.toString().substring(0,3)} ${date.toLocaleDateString()}</h3>
+		<h1 class='dateHeader'>${date.toString().substring(0,3)} ${date.toLocaleDateString()}</h1>
 		<p class='dreamEntryContent'>${object.content}</p>
-		<button type='button' role='button' class='seeMoreLogEntry${object._id}'><img class='seeMoreImage' src='https://i.imgur.com/lX9FEcH.png?1'/></button>
+		<button type='button' role='button' class='seeMoreLogEntry${object._id}'><img class='seeMoreImage' src='https://i.imgur.com/lX9FEcH.png?1' alt='expand view icon'/></button>
 		<div class='moreDreamEntryBox${object._id}' hidden><div class='keywordsSection'><h4>Keywords:</h4><div class='tags'></div></div>
 		<div class='moodSection'><h4>Mood:</h4><div class='tags'></div></div>
 		<div class='nightmareSection'><h4>Nightmare:</h4><p>${object.nightmare}</p></div>
