@@ -478,10 +478,10 @@ function displayDreamLog(data){
 		<h1 class='dateHeader'>${date.toString().substring(0,3)} ${date.toLocaleDateString()}</h1>
 		<p class='dreamEntryContent'>${object.content}</p>
 		<button type='button' role='button' class='seeMoreLogEntry${object._id}'><img class='seeMoreImage' src='https://i.imgur.com/lX9FEcH.png?1' alt='expand view icon'/></button>
-		<div class='moreDreamEntryBox${object._id}' hidden><div class='keywordsSection'><h4>Keywords:</h4><div class='tags'></div></div>
-		<div class='moodSection'><h4>Mood:</h4><div class='tags'></div></div>
-		<div class='nightmareSection'><h4>Nightmare:</h4><p>${object.nightmare}</p></div>
-		<div class='lifeEventsSection'><h4>Themes of Importance or Worry at Time:</h4></div>
+		<div class='moreDreamEntryBox${object._id}' hidden><div class='keywordsSection'><h2>Keywords:</h2><div class='tags'></div></div>
+		<div class='moodSection'><h2>Mood:</h2><div class='tags'></div></div>
+		<div class='nightmareSection'><h2>Nightmare:</h2><p>${object.nightmare}</p></div>
+		<div class='lifeEventsSection'><h2>Themes of Importance or Worry at Time:</h2></div>
 		</div>
 		</div>`);
 		let color;

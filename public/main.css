@@ -294,6 +294,7 @@ text-color: #243647;
 	padding-right: 20px;
 	border-radius: 2px;
  	box-shadow:0 0 4px 1px #16283f inset;
+ 	min-width: 100px;
 }
 
 .newEntryFieldset {
@@ -409,9 +410,9 @@ input[name='dreamTypeInput']{
 	margin: 3px;
 }
 
-
 .dreamLogFilteredView .dreamEntry{
-	top: 15px;
+	top: 30px;
+	clear: both;
 }
 
 .dreamlogEditHeader{
@@ -714,6 +715,7 @@ input[name='dreamTypeInput']{
 	padding-top: 50px;
 	margin-top: 0px;
 	margin-bottom: 5px;
+	text-align: left;
 }
 
 .dreamEntry .seeMoreImage {
@@ -809,6 +811,8 @@ input[name='dreamTypeInput']{
 	padding-top: 20px;
 	padding-left: 20px;
 	color: #12243a;
+	float: left;
+	clear: both;
 }
 
 .dreamlogEntryButtons {
