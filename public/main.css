@@ -834,13 +834,15 @@ input[name='dreamTypeInput']{
 	overflow: hidden;
 }
 
-.keywordsSection h4, .moodSection h4, .nightmareSection h4, .nightmareSection p{
+.keywordsSection h2, .moodSection h2, .nightmareSection h2, .nightmareSection p{
 	width: fit-content;
 	margin: 10px;
+	font-size: 18px;
 	display: block;
 }
 
-.lifeEventsSection h4 {
+.lifeEventsSection h2 {
+	font-size: 18px;
 	margin: 10px;
 }
 

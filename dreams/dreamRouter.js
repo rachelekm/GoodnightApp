@@ -15,7 +15,6 @@ const {dreamEntry} = require('./models');
 router.get('/', jwtAuth, (req, res)=>{
   const cutoffDate = new Date()
   cutoffDate.setDate(cutoffDate.getDate() - 30);
-  console.log(cutoffDate);
   let user = req.user.id;
   return dreamEntry.find({$and: [{user: user}, {submitDate: {"$gte": new Date(cutoffDate), "$lt": new Date()}}]}).populate('user').then(dreams => {
       return res.status(200).json(dreams.map(entry=>entry.serialize()));
@@ -128,7 +127,6 @@ router.post('/dream-log', jsonParser, jwtAuth, (req, res) => {
   if(query.indexOf(',') != -1){
         query = query.split(', ');
   }
-  console.log(query);
   if(typeof query == 'string'){
 
   return dreamEntry.find({$and: [{user: user}, {$or: [ { 'mood' : { $regex: query, $options: 'i' }}, { 'keywords' : { $regex: query, $options: 'i' }}, { 'content' : { $regex: query, $options: 'i' }}, { 'lifeEvents' : { $regex: query, $options: 'i' }}]}]}).then(function(entries){

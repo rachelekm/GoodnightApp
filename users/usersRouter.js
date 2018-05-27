@@ -154,7 +154,6 @@ router.get('/', jwtAuth, (req, res) => {
   });
 });
 
-//used in test integrations
 router.get('/users', (req, res) => {
   return User.find()
     .then(users => res.json(users.map(user => user.serialize())))

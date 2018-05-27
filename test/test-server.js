@@ -101,8 +101,6 @@ describe('Dream Journal', function() {
         .set('Authorization', `Bearer ${token}`);
       })
       .then(function(res) {
-        console.log(res);
-        console.log(res.body);
         expect(res).to.have.status(200);
         expect(res).to.be.json;
         expect(res.body).to.be.a('object');
@@ -138,7 +136,7 @@ describe('Dream Journal', function() {
         expect(res.body).to.deep.equal(Object.assign(newItem, {_id: res.body._id}, {user: res.body.user}, {__v: 0}));
       });
   });
-//finish editing below!
+
   it('should update items on PUT', function() {
     let user;
     return chai.request(app)

@@ -62,7 +62,6 @@ function signUpErrorWindow(err){
 		err.location.forEach(err => {
 			if(err === 'firstName'){ newLocation = 'first name'};
 			if(err === 'lastName'){ newLocation = 'last name'};
-			console.log(newLocation);
 			$('.signUpFieldset').find(`input[placeholder="${newLocation}"]`).addClass('locationSelection');
 		});
 		$('.signUpFieldset').append(`<div class='warningBoxIncorrectLogin' aria-live='assertive'>${message}</div>`);
@@ -104,7 +103,6 @@ function errorListeners(){
 }
 
 function displayAccountProfile(data){
-	console.log(data, 'in account profile function');
 	let newDate = makePrettyDate(data.accountCreated);
 	$('#accountProfileWindow').show().append(`<div class="accountProfile">
 		<button type='button' class='closeProfileWindow'>X</button>
@@ -138,8 +136,10 @@ function createEditForm(objectInfo){
         		<input type='text' name='dreamKeywordsInput3' value='${objectInfo.keywords[2]}' placeholder='${objectInfo.keywords[2]}' aria-label="dream-keyword-input">
 				<legend class='moreInfoForm1EDIT'>Was this a nightmare?
 				<fieldset>
-            	<input type='radio' name='dreamTypeInput' value='yes' aria-label="dream-type-slection-option1" required><label for='dreamTypeInput'>Yes</label>
-            	<input type='radio' name='dreamTypeInput' value='no' aria-label="dream-type-slection-option2"><label for='dreamTypeInput'>No</label>
+					<legend>
+            			<input type='radio' name='dreamTypeInput' value='yes' aria-label="dream-type-slection-option1" required><label for='dreamTypeInput'>Yes</label>
+            			<input type='radio' name='dreamTypeInput' value='no' aria-label="dream-type-slection-option2"><label for='dreamTypeInput'>No</label>
+            		</legend>
             	</fieldset>
             	</legend>
 				<legend class='moreInfoForm2EDIT'>Select how you feel below:
@@ -188,7 +188,6 @@ function findMostCommonMood(mockDataWithSymbol){
 			allMoods.push(item);
 		});
 	});
-	console.log(allMoods);
 	uniqueMoods = [...new Set(allMoods)];
 	uniqueMoods.forEach(item => {
 		countedMoods.push({mood: item, count: 0});
@@ -302,22 +301,18 @@ return countedKeywords.sort(highestCount);
 }
 
 function viewCalendarEvents(data, selection){
-	console.log(data);
 	const allMoods = ['Happy', 'Calm', 'Lethargic', 'Emotional', 'Anxious', 'Irritated', 'Depressed', 'Excited', 'Nervous', 'Apathetic'];
 	const allLifeEvents = ['Opportunities and Professional Development', 'Sense of Purpose', 'Home and Domestic Development', 'Family', 'Relationships', 'School or Work Expectations', 'Creative Pursuits', 'Security and Control', 'Religion or Spirituality', 'Health', 'Money', 'Aging', 'Physical Appearance'];
 
 	if(selection==='Moods 💭'){
-		console.log('moods');
 		let eventsReference = updateCalendar('💭', data);
 		$('#calendar').fullCalendar('addEventSource', eventsReference);
 	}
 	else if(selection==='Life Events 🔔'){
-		console.log('events');
 		let eventsReference = updateCalendar('🔔', data);
 		$('#calendar').fullCalendar('addEventSource', eventsReference);
 	}
 	else if(selection==='Nightmares ⚡'){
-		console.log('nightmares');
 		let dataArray = [];
 		data.forEach(object=> {
 			if(object.nightmare === 'yes'){
@@ -331,7 +326,6 @@ function viewCalendarEvents(data, selection){
 
 function displayCalEventDetails(data, calEvent){
 	$('.symbolsMoreInfoBox').empty().hide();
-	console.log(calEvent);
 	$('.eventsMoreInfoBox').empty().show();
 	let dreamEntry;
 	data.forEach(object=>{
@@ -433,10 +427,10 @@ function displayDreamLogFILTER(data){
 		<h1 class='dateHeader'>${date.toString().substring(0,3)} ${date.toLocaleDateString()}</h1>
 		<p class='dreamEntryContent'>${object.content}</p>
 		<button type='button' role='button' class='seeMoreLogEntry${object._id}'><img class='seeMoreImage' src='https://i.imgur.com/lX9FEcH.png?1' alt='expand view icon'/></button>
-		<div class='moreDreamEntryBox${object._id}' hidden><div class='keywordsSection'><h4>Keywords:</h4><div class='tags'></div></div>
-		<div class='moodSection'><h4>Mood:</h4><div class='tags'></div></div>
-		<div class='nightmareSection'><h4>Nightmare:</h4><p>${object.nightmare}</p></div>
-		<div class='lifeEventsSection'><h4>Themes of Importance or Worry at Time:</h4></div>
+		<div class='moreDreamEntryBox${object._id}' hidden><div class='keywordsSection'><h2>Keywords:</h2><div class='tags'></div></div>
+		<div class='moodSection'><h2>Mood:</h2><div class='tags'></div></div>
+		<div class='nightmareSection'><h2>Nightmare:</h2><p>${object.nightmare}</p></div>
+		<div class='lifeEventsSection'><h2>Themes of Importance or Worry at Time:</h2></div>
 		</div>
 		</div>`);
 		let color;
@@ -627,7 +621,6 @@ function dreamReportPageListeners(){
 		$('.eventsMoreInfoBox').empty().hide();
 		$('.symbolsMoreInfoBox').show();
 		let color = $(this).find('button').attr('class').split(' ')[1];
-		console.log(color);
 		let index = $(this).find('button').attr('class').slice(-1);
 		let targetSymbol = $(this).find('button').text();
 		displaySymbolDetails(dreams, targetSymbol, index, color);
@@ -663,7 +656,6 @@ function dreamLogPageListeners(){
 	$('.searchDreamForm').on('click', '.viewAllDreamEntries', event => {window.location.href = 'dreamlog.html';});
 	$('#dreamLog').on('click', '.dreamEntry', event => {
 		let selectedID = event.currentTarget.attributes[1].textContent;
-		console.log(selectedID);
 		$('#dreamLog').find(`.moreDreamEntryBox${selectedID}`).toggle('slow');
 		$('#dreamLog').find(`.seeMoreLogEntry${selectedID}`).toggle();
 	});
@@ -757,7 +749,6 @@ function dreamLogPageListeners(){
 			'lifeEvents': userLifeThemes,
 			'content': newDream
 			};
-			console.log(newObject);
 		$.ajax({
 			method: 'PUT',
 			url: `${getEndpoint()}/${id}`,
@@ -794,7 +785,6 @@ function dreamLogPageListeners(){
 			method: 'DELETE',
 			url: `${getEndpoint()}/${id}`,
 			success: function(){
-				console.log('made it to success');
 				$('#deleteEntryWarning').empty().hide();
 				location.reload();
 			},
