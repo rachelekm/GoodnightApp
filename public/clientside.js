@@ -328,7 +328,7 @@ function viewCalendarEvents(data, selection){
 }
 
 function displayCalEventDetails(data, calEvent){
-	$('.symbolsMoreInfoBox').empty();
+	$('.symbolsMoreInfoBox').empty().hide();
 	console.log(calEvent);
 	$('.eventsMoreInfoBox').empty().show();
 	let dreamEntry;

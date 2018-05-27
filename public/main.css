@@ -257,7 +257,7 @@ text-color: #243647;
 
 #accountProfileWindow {
 	width: 100%;
-	left: 0;
+	right: 0;
 	z-index: 3;
 	position: relative;
 	height: 60%;
@@ -304,6 +304,12 @@ text-color: #243647;
 .dreamEntryLegend {
 	width: 100%;
 	margin: 3px;
+}
+
+.dreamEntryNone {
+	display: block;
+	float: left;
+	text-align: left;
 }
 
 .dreamEntryForm input{
@@ -973,6 +979,13 @@ input[name='dreamTypeInput']{
 	margin: 20px;
 }
 
+#accountProfileWindow {
+	width: 35%;
+	position: absolute;
+	height: fit-content;
+	z-index: 10;
+}
+
 #pageContents {
 	padding: 20px;
 }
@@ -989,7 +1002,7 @@ input[name='dreamTypeInput']{
 	padding: 10px;
 	padding-left: 20px;
 	padding-right: 20px;
-	margin: 20px;
+	margin-left: 20px;
 }
 
 .calendarSelection {
@@ -1023,17 +1036,67 @@ input[name='dreamTypeInput']{
 	padding: 20px;
 }
 
+.dreamLogFilteredView {
+	margin-top: 15%;
+}
+
+.searchTextBoxLog {
+	float: left;
+}
+
 #editEntryWindow, #deleteEntryWarning, #errorWarningWindow, #refreshCredWarningWindow, .dreamContentWindow{
 	max-width: 400px;
 	font-size: 24px;
 	top: 50px;
 	left: 20vw;
 }
+
+.dreamEntry .dateHeader, .dreamEntry p {
+	font-size: 20px;
+}
+
+#editEntryWindow, #deleteEntryWarning, #errorWarningWindow, #refreshCredWarningWindow, .dreamContentWindow {
+	top: 10%;
+	left: 25%;
+	height: 80%;
+	max-width: 50%;
+}
+.editEntryForm {
+	width: 90%;
+	max-width: 800px;
+}
+
+.editEntryForm * {
+	max-width: 800px;
+}
+
+.editEntryForm input[type='radio'] {
+	width: fit-content;
+}
+
+.editEntryForm textarea[name='dreamContentInput'] {
+	width: 100%;
+	height: -webkit-fill-available
+}
+
+.editEntryForm input, .editEntryForm select {
+	width: 80%;
+}
+
+.editEntryForm legend {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
 }
 
 @media only screen and (min-width: 1023px) {
 .intro{
 	max-height: 75vh;
+}
+
+#pageContents {
+	padding: 40px;
 }
 
 .introWords {
@@ -1050,8 +1113,12 @@ input[name='dreamTypeInput']{
 	width: 25%;
 	position: relative;
 	float: right;
-	margin-top: 40%;
+	margin-top: 30%;
 	margin-right: 10%;
+}
+
+#landingPage h1 {
+	padding-top: 0;
 }
 
 #landingPage .getStartedButton {
@@ -1069,6 +1136,7 @@ input[name='dreamTypeInput']{
 
 .demoAccountLoginButton {
 	font-size: 25px;
+	background-color: transparent;
 }
 
 .calendarSelection {
@@ -1089,7 +1157,7 @@ input[name='dreamTypeInput']{
 	float: right;
 }
 
-.eventsMoreInfoBox {
+.eventsMoreInfoBox, .moreInfoCSS {
 	font-size: 20px;
 	float: left;
 	margin-left: 20px;
@@ -1108,12 +1176,11 @@ input[name='dreamTypeInput']{
 	margin-right: auto;
 }
 
-#pageContents {
-	max-width: 700px;
+.containerCSS {
+	max-width: 750px;
 	margin-left: auto;
 	margin-right: auto;
 }
-
 
 
 }
