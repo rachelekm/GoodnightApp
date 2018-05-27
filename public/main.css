@@ -325,6 +325,7 @@ text-color: #243647;
 	margin: 3px;
 	margin-top: 7px;
 	background-color:  #12243a;
+
 }
 
 .dreamEntryForm input::placeholder{
@@ -332,7 +333,7 @@ text-color: #243647;
 	font-weight: lighter;
 }
 
-textarea[name='dreamContentInput'] {
+textarea[name='dreamContentInput'], .textareaIE {
 	padding: 15px;
 	width: 100%;
 	height: 300px;
@@ -343,7 +344,7 @@ textarea[name='dreamContentInput'] {
 	background-color:  white;
 }
 
-textarea[name='dreamContentInput']::placeholder {
+textarea[name='dreamContentInput']::placeholder, .textareaIE::placeholder {
 	color: #243647;
 }
 
@@ -364,7 +365,7 @@ textarea[name='dreamContentInput']::placeholder {
 	height: 45px;
 }
 
-.newEntryFieldset input, .newEntryFieldset select{
+.newEntryFieldset input, .newEntryFieldset select, .inputSelectIE, .inputRadioIE, .inputKeywordIE{
 	width: 100%;
 	padding: 5px;
 	color: #243647;
@@ -373,11 +374,11 @@ textarea[name='dreamContentInput']::placeholder {
 	border-radius: 2px;
 }
 
-.newEntryFieldset select{
+.newEntryFieldset select, .inputSelectIE{
 	margin-top: 10px;
 }
 
-.newEntryFieldset select option{
+.newEntryFieldset select option, .inputSelectIE option{
 	background-color: white;
 }
 
@@ -385,7 +386,7 @@ textarea[name='dreamContentInput']::placeholder {
 	background-color: white;
 }
 
-.dreamEntry select{
+.dreamEntry select, .inputSelectIE{
 	background-color: white;
 	margin: 10px;	
 }
@@ -395,7 +396,7 @@ textarea[name='dreamContentInput']::placeholder {
 	display: inline-block;
 }
 
-input[name='dreamTypeInput']{
+input[name='dreamTypeInput'], .inputRadioIE{
 	width: 20px;
 	background-color: white;
 	display: inline-block;
@@ -580,25 +581,25 @@ input[name='dreamTypeInput']{
 	margin: 0px;
 }
 
-.editEntryForm textarea[name='dreamContentInput'] {
+.editEntryForm textarea[name='dreamContentInput'], .textareaEditIE {
 	color: #243647;
 	height: 90px;
 	width: 200px;
 	border: 1px solid #243647;
 }
 
-.editEntryForm textarea::placeholder {
+.editEntryForm textarea::placeholder, .textareaEditIE::placeholder {
 	color: #243647;
 }
 
-.editEntryForm input, .editEntryForm select{
+.editEntryForm input, .editEntryForm select, .inputKeywordEditIE, .inputRadioEditIE, .inputSelectEditIE{
 	color: #243647;
 	width: 200px;
 	margin: 2px;
 	border: 1px solid #243647;
 }
 
-.editEntryForm input[type='radio'] {
+.editEntryForm input[type='radio'], .inputRadioEditIE {
 	width: 10%;
 }
 

@@ -128,22 +128,22 @@ function createEditForm(objectInfo){
 			<form class="editEntryForm">
       			<fieldset class="editEntryFieldset">
       			<legend class='dreamEntryLegendEDIT'>
-        		<textarea type='text' name='dreamContentInput' aria-label="dream-entry-content-input" wrap='soft' required>${objectInfo.content}
+        		<textarea type='text' name='dreamContentInput' aria-label="dream-entry-content-input" wrap='soft' class='textareaEditIE' required>${objectInfo.content}
         		</textarea></legend>
       			<h4>Keywords:</h4>
-				<input type='text' name='dreamKeywordsInput1' value='${objectInfo.keywords[0]}' placeholder='${objectInfo.keywords[0]}' aria-label="dream-keyword-input" required>
-        		<input type='text' name='dreamKeywordsInput2' value='${objectInfo.keywords[1]}' placeholder='${objectInfo.keywords[1]}' aria-label="dream-keyword-input">
-        		<input type='text' name='dreamKeywordsInput3' value='${objectInfo.keywords[2]}' placeholder='${objectInfo.keywords[2]}' aria-label="dream-keyword-input">
+				<input type='text' class='inputKeywordEditIE' name='dreamKeywordsInput1' value='${objectInfo.keywords[0]}' placeholder='${objectInfo.keywords[0]}' aria-label="dream-keyword-input" required>
+        		<input type='text' class='inputKeywordEditIE' name='dreamKeywordsInput2' value='${objectInfo.keywords[1]}' placeholder='${objectInfo.keywords[1]}' aria-label="dream-keyword-input">
+        		<input type='text' class='inputKeywordEditIE' name='dreamKeywordsInput3' value='${objectInfo.keywords[2]}' placeholder='${objectInfo.keywords[2]}' aria-label="dream-keyword-input">
 				<legend class='moreInfoForm1EDIT'>Was this a nightmare?
 				<fieldset>
 					<legend>
-            			<input type='radio' name='dreamTypeInput' value='yes' aria-label="dream-type-slection-option1" required><label for='dreamTypeInput'>Yes</label>
-            			<input type='radio' name='dreamTypeInput' value='no' aria-label="dream-type-slection-option2"><label for='dreamTypeInput'>No</label>
+            			<input type='radio' class='inputRadioEditIE' name='dreamTypeInput' value='yes' aria-label="dream-type-slection-option1" required><label for='dreamTypeInput'>Yes</label>
+            			<input type='radio' class='inputRadioEditIE' name='dreamTypeInput' value='no' aria-label="dream-type-slection-option2"><label for='dreamTypeInput'>No</label>
             		</legend>
             	</fieldset>
             	</legend>
 				<legend class='moreInfoForm2EDIT'>Select how you feel below:
-				<select name='userMoodInput' aria-label="user-mood-input" multiple size='3' required>
+				<select name='userMoodInput' class='inputSelectEditIE' aria-label="user-mood-input" multiple size='3' required>
       				<option value='happy'>Happy</option>
       				<option value='calm'>Calm</option>
       				<option value='lethargic'>Lethargic</option>
@@ -156,7 +156,7 @@ function createEditForm(objectInfo){
       				<option value='apathetic'>Apathetic</option>
       			</select></legend>
             	<legend class='moreInfoForm2EDIT'>Select the life themes you're currently giving significant thought or worry:
-					<select name='userLifeEventsInput' aria-label="user-life-events-input" multiple size='3' required>
+					<select name='userLifeEventsInput' class='inputSelectEditIE' aria-label="user-life-events-input" multiple size='3' required>
               			<option value='Opportunities and Professional Development'>Opportunities and Professional Development</option>
               			<option value='Sense of Purpose'>Sense of Purpose</option>
               			<option value='Home and Domestic Development'>Home and Domestic Development</option>

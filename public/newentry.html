@@ -33,21 +33,21 @@
         <h1>Add a new dream:</h1>
       			<fieldset class="newEntryFieldset">
         		<legend class='dreamEntryLegend'>
-        		<textarea type='text' name='dreamContentInput' placeholder='Record your dream here...' aria-label="dream-entry-content-input" wrap='soft' required></textarea></legend>
+        		<textarea type='text' name='dreamContentInput' placeholder='Record your dream here...' aria-label="dream-entry-content-input" wrap='soft' class='textareaIE' required></textarea></legend>
         		<legend class='moreInfoForm1' hidden>What three symbols stuck out most?
 
-        		<input type='text' name='dreamKeywordsInput1' placeholder='1.' aria-label="dream-keyword-input" required></legend>
+        		<input type='text' name='dreamKeywordsInput1' placeholder='1.' aria-label="dream-keyword-input" class='inputKeywordIE' required></legend>
         		<legend class='moreInfoForm1' hidden>
-        		<input type='text' name='dreamKeywordsInput2' placeholder='2.' aria-label="dream-keyword-input"></legend>
+        		<input type='text' name='dreamKeywordsInput2' placeholder='2.' aria-label="dream-keyword-input" class='inputKeywordIE'></legend>
         		<legend class='moreInfoForm1' hidden>
-        		<input type='text' name='dreamKeywordsInput3' placeholder='3.' aria-label="dream-keyword-input"></legend>
+        		<input type='text' name='dreamKeywordsInput3' placeholder='3.' aria-label="dream-keyword-input" class='inputKeywordIE'></legend>
             <legend class='moreInfoForm1' hidden>Was this a nightmare?
-            <input type='radio' name='dreamTypeInput' value='yes' aria-label="dream-type-slection-option1" required><label for='dreamTypeInput'>Yes</label>
-            <input type='radio' name='dreamTypeInput' value='no' aria-label="dream-type-slection-option2"><label for='dreamTypeInput'>No</label>
+            <input type='radio' name='dreamTypeInput' value='yes' aria-label="dream-type-slection-option1" class='inputRadioIE' required><label for='dreamTypeInput'>Yes</label>
+            <input type='radio' name='dreamTypeInput' value='no' aria-label="dream-type-slection-option2" class='inputRadioIE' ><label for='dreamTypeInput'>No</label>
             </legend>
 				<legend class='moreInfoForm2' hidden>Select how you feel below:
 
-      			<select name='userMoodInput' aria-label="user-mood-input" multiple size='3' required>
+      			<select name='userMoodInput' aria-label="user-mood-input" multiple size='3' class='inputSelectIE' required>
       				<option value='happy'>Happy</option>
       				<option value='calm'>Calm</option>
       				<option value='lethargic'>Lethargic</option>
