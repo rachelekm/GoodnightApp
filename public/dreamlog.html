@@ -11,19 +11,19 @@
 	<link rel="stylesheet" href="/main.css">
 </head>
 <body>
-	<header role='header' class='navigationBar'>
-			<a href='dreamreport.html'><button type='button' class='dreamReportNavButton' value='Go_to_Dream_Report'><img src='https://i.imgur.com/BC4IfeR.png'></button></a>
-			<a href='/newentry.html'><button type='button' class='newEntryNavButton' value='Go_to_New_Dream_Entry'><img src='https://i.imgur.com/LA8h4aR.png'></button></a>
-			<a href='dreamlog.html'><button type='button' class='dreamLogNavButton' value='Go_to_Dream_Log'><img src='https://i.imgur.com/3rYNook.png'></button></a>
-			<button type='button' class='accountProfileNavButton' value='Go_to_Account_Profile'><img src='https://i.imgur.com/NaPOcQ7.png'></button>
+	<header role='banner' class='navigationBar'>
+			<a href='dreamreport.html' aria-label='link to homepage'><button type='button' class='dreamReportNavButton' value='Go_to_Dream_Report' aria-live='Go_to_Dream_Report'><img src='https://i.imgur.com/BC4IfeR.png' alt='Go to homepage Icon'></button></a>
+			<a href='/newentry.html' aria-label='link to new entry page'><button type='button' class='newEntryNavButton' value='Go_to_New_Dream_Entry' aria-live='Go_to_New_Dream_Entry'><img src='https://i.imgur.com/LA8h4aR.png' alt='Go to new dream entry icon'></button></a>
+			<a href='dreamlog.html' aria-label='link to dream log'><button type='button' class='dreamLogNavButton' value='Go_to_Dream_Log' aria-live='Go_to_Dream_Log'><img src='https://i.imgur.com/3rYNook.png' alt='Go to dream log icon'></button></a>
+			<button type='button' class='accountProfileNavButton' value='Go_to_Account_Profile' aria-label='button to open account profile'><img src='https://i.imgur.com/NaPOcQ7.png' alt='See account profile icon'></button>
 	</header>
-	<section id='accountProfileWindow' hidden>
+	<section id='accountProfileWindow' hidden aria-live='assertive'>
 	</section>
-  	<section id='errorWarningWindow' hidden>
+  	<section id='errorWarningWindow' hidden aria-live='assertive'>
     	<h2>Uh oh, looks like our server is getting its beauty sleep.</h2>
       	<button role="button" type="button" class="backtoHomepageButton">Back to Homepage</button>
     </section>
-  	<section id='refreshCredWarningWindow' hidden>
+  	<section id='refreshCredWarningWindow' hidden aria-live='assertive'>
     	<h2>Wake up, sleepyhead! Please log back in to access your dreams.</h2>
       	<button role="button" type="button" class="refreshCredButton">Back to Login</button>
     </section>
@@ -33,13 +33,13 @@
 				<div class=searchBar>
         		<legend>
         		<input type='text' name='dreamSearchInput' placeholder='Search keywords, mood, content' aria-label="dream--search-input">
-        		<button role="button" type="submit" class="dreamSearchButton"><img src='https://i.imgur.com/EFnPWug.png'/></button>
+        		<button role="button" type="submit" class="dreamSearchButton"><img src='https://i.imgur.com/EFnPWug.png' alt='submit search query icon'/></button>
         	</div>
         	</form>
 			<div id='dreamLog'>
 			</div>
-			<div id='deleteEntryWarning' hidden></div>
-			<div id='editEntryWindow' hidden></div>
+			<div id='deleteEntryWarning' hidden aria-live='assertive'></div>
+			<div id='editEntryWindow' hidden aria-live='assertive'></div>
 		</section>
 	</section>
 <script src="/clientside.js"></script>

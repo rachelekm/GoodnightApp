@@ -52,7 +52,7 @@ const colors = ["orange", "blue", "red", "green", "purple"];
 }
 
 function incorrectLoginWindow(){
-	$('.loginFieldset').append(`<div class='warningBoxIncorrectLogin'>Your email or password are incorrect, please try again.</div>`)
+	$('.loginFieldset').append(`<div class='warningBoxIncorrectLogin' aria-live='assertive'>Your email or password are incorrect, please try again.</div>`)
 }
 
 function signUpErrorWindow(err){
@@ -65,20 +65,20 @@ function signUpErrorWindow(err){
 			console.log(newLocation);
 			$('.signUpFieldset').find(`input[placeholder="${newLocation}"]`).addClass('locationSelection');
 		});
-		$('.signUpFieldset').append(`<div class='warningBoxIncorrectLogin'>${message}</div>`);
+		$('.signUpFieldset').append(`<div class='warningBoxIncorrectLogin' aria-live='assertive'>${message}</div>`);
 	}
 	else {
 		newLocation = err.location;
 		if(err.location === 'firstName'){ newLocation = 'first name'};
 		if(err.location === 'lastName'){ newLocation = 'last name'};
 		$('.signUpFieldset').find(`input[placeholder="${newLocation}"]`).addClass('locationSelection');
-		$('.signUpFieldset').append(`<div class='warningBoxIncorrectLogin'>${err.message}</div>`);
+		$('.signUpFieldset').append(`<div class='warningBoxIncorrectLogin' aria-live='assertive'>${err.message}</div>`);
 	}
 }
 
 function showGeneralErrorWindow(err){
 	if(err.responseJSON.message === 'A dream entry has already been submitted today'){
-		$('#pageContents').append(`<div class='oneEntryPerDay'><p>It looks like you've already entered a dream for today! If you would like to edit last night's dream, click <a href='dreamlog.html'>here.</a></p></div>`);
+		$('#pageContents').append(`<div class='oneEntryPerDay' aria-live='assertive'><p>It looks like you've already entered a dream for today! If you would like to edit last night's dream, click <a href='dreamlog.html'>here.</a></p></div>`);
 		$('html, body').animate({ 
    		scrollTop: $(document).height()-$(window).height()}, 
    		250, 
@@ -362,7 +362,7 @@ function displayDreamReport(data){
 		viewCalendarEvents(data, selection);
 	});
 	if(data.length === 0){
-	$('#dreamReport').append(`<div class='dreamSummary'>
+	$('#dreamReport').append(`<div class='dreamSummary' aria-live='assertive'>
 		<h1>You haven't entered any dreams yet! Click<a href='newentry.html'> here </a>to record your first dream.</h1>
 		<p>Once you record your dream, come back here to view your dream journey.</p>
 		</div><div class='dreamSymbols'></div>`);
@@ -376,12 +376,12 @@ function displayDreamReport(data){
 			<h1>Most common dream symbols:</h1>
 			<p>Last 30 days:</p>
 			</div><div class='dreamSymbols'></div>
-			<div class='calendarSelection'>Viewing on calendar:
+			<div class='calendarSelection'><label>Viewing on calendar:
 			<select>
 				<option value="0">Nightmares ⚡</option>
 				<option value="1">Moods 💭</option>
 				<option value="2">Life Events 🔔</option>
-			</select></div>`);
+			</select></label></div>`);
 		colors = colors.sort(shuffle);
 		if(numKeywords > 5){
 			for(let i =0; i < 5; i++){
@@ -413,13 +413,13 @@ function displayDreamLogFILTER(data){
 	let searchQuery = data.query;
 	$('input[name="dreamSearchInput"]').val('');
 	if(data.entries.length === 0){
-		$('#dreamLog').append(`<div class='dreamEntryNone'><h1>You haven't entered any dreams yet! Click <a href='newentry.html'>here</a> to record your first dream.</h1>
+		$('#dreamLog').append(`<div class='dreamEntryNone' aria-live='assertive'><h1>You haven't entered any dreams yet! Click <a href='newentry.html'>here</a> to record your first dream.</h1>
 		<p>Once you record your dream, come back here to view and search your dream bank.</p>
 		</div>`);
 	}
 	else{
 		if(searchQuery !== "" || searchQuery !== " "){
-			$('.searchDreamForm').append(`<div class='searchTextBoxLog'>Showing dreams with: ${searchQuery}</button>`);
+			$('.searchDreamForm').append(`<div class='searchTextBoxLog' aria-live='assertive'>Showing dreams with: ${searchQuery}</button>`);
 		}
 	data.entries.reverse().forEach(object =>{
 		let date = new Date(object.submitDate);
@@ -466,7 +466,7 @@ function displayDreamLogFILTER(data){
 function displayDreamLog(data){
 	$('#dreamLog').empty().removeClass('dreamLogFilteredView');
 	if(!data.length > 0){
-		$('#dreamLog').append(`<div class='dreamEntryNone'><h1>You haven't entered any dreams yet! Click <a href='newentry.html'>here</a> to record your first dream.</h1>
+		$('#dreamLog').append(`<div class='dreamEntryNone' aria-live='assertive'><h1>You haven't entered any dreams yet! Click <a href='newentry.html'>here</a> to record your first dream.</h1>
 		<p>Once you record your dream, come back here to view and search your dream bank.</p>
 		</div>`);
 	}
