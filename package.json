@@ -9,6 +9,7 @@
     "express": "^4.17.1",
     "fullcalendar": "^3.10.2",
     "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.6.3",
     "mongoose": "^5.11.10",
     "morgan": "^1.10.0",
     "passport": "^0.4.1",
