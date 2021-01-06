@@ -6,8 +6,6 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const passport = require('passport');
 
-mongoose.Promise = global.Promise;
-
 const { PORT, DATABASE_URL, TEST_DATABASE_URL } = require('./config');
 
 const app = express();
