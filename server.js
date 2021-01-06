@@ -21,6 +21,7 @@ app.use(morgan('common'));
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
+  console.log(DATABASE_URL, TEST_DATABASE_URL);
   res.sendFile(__dirname + '/views/index.html');
 });
 
@@ -85,6 +86,7 @@ function closeServer() {
 }
 
 if (require.main === module) {
+  console.log(DATABASE_URL);
   runServer(DATABASE_URL).catch(err => console.error(err));
 }
 
