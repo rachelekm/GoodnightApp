@@ -1,2 +1,10 @@
 language: node_js
 node_js: node
+deploy:
+  provider: heroku
+  api_key:
+    secure: JBBxeZmDKcVuR0C56x0J38V0j1R9IxaDwq30QPeWaSFy040AEhQLz3lW/4g/XHKiofThNHsMaleBoLkaCqq30ZaKN3ZxpqUhvWwHbVULhEmf8K/7T+g/BursvuJOxk6KW0E/zS7+Ylf0q/1xzEdTFHRPVBuu6BTs+XsOg0VFRgF0XF9iY4/sNy83NcJWsotDANNnXnvuY4+4A32aFFCkErr/yovRV2POSzsJFy9//1Fr/bbyHHxPTy4Y6hxtBJkl5bSypYM5WeNJpR+8RxP42XAvK+eyBhmSIpmKKQolQ2DurkTeLYihpRpLixUcLzyXPnwpFVvHF384eygAFfbKJDIY++xveguzRosoMOaepRa5aSDvie0TWJSLwFvclrqhRWOoC2g00vd+kULjIHlI7LaEmBWJgZY7t8kK5TF1uIYvs8q/Wfai09Xa3vnqH+hS/+wJwxc7Htcm+QtbQO89m2u9MZ3QvU2CiNHe0wMk+0gKorWLiMBb/tLIv3iTDiCjs3E2/3Yk+m6oia9XLUZHWKHJRurIeukbDFKcM9Vg7FE7e87BAmgiHMHcAcd5Qu3zazp3AeCPxZmfAUy3dyVL/Ch/cdqnrfFXhcTWiGsJbRPqPKFtBqr81pvXpRVSao9xmVvQNaYZmxf9iDN1HET2F8N8K/bt42usiUT1P1Kg2J0=
+  app: thegoodnightapp
+  on:
+    repo: rachelekm/GoodnightApp
+  skip_cleanup: 'true'
